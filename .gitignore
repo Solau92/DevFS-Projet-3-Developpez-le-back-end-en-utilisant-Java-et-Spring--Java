@@ -31,11 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/java/com/ChaTop/Rental/configuration/SpringSecurityConfig.java
-src/main/java/com/ChaTop/Rental/controller/HomeController.java
-src/main/java/com/ChaTop/Rental/controller/LoginController.java
 src/main/java/com/ChaTop/Rental/controller/RentalsController.java
 src/main/java/com/ChaTop/Rental/entity/Rental.java
 src/main/java/com/ChaTop/Rental/repository/RentalsRepository.java
-src/main/java/com/ChaTop/Rental/service/JWTService.java
 src/main/java/com/ChaTop/Rental/service/RentalsService.java
