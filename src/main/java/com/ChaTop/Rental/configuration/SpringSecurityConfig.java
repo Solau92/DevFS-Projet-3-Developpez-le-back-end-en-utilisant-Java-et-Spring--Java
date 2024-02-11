@@ -34,6 +34,13 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
                 .httpBasic(Customizer.withDefaults())
+                // .formLogin(
+                //     form -> form
+                //     .loginPage("/api/auth/login")
+                //     .loginProcessingUrl("/login")
+                //     .defaultSuccessUrl("/api/rentals")
+                //     .permitAll()
+                // )
                 .build();
     }
 
