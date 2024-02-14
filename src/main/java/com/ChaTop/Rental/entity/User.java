@@ -38,6 +38,25 @@ public class User {
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private LocalDate updated_at;
 
+    public User() {
+    }
+
+    public User(int id, String email, String name, String password, LocalDate created_at, LocalDate updated_at) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+    }
+
+    public User(String email, String name, String password, LocalDate created_at) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.created_at = created_at;
+    }
+
     public int getId() {
         return this.id;
     }

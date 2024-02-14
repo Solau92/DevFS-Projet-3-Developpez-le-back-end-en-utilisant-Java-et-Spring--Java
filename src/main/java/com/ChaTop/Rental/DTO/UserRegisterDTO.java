@@ -2,23 +2,14 @@ package com.ChaTop.Rental.DTO;
 
 import java.time.LocalDate;
 
-public class UserDTO {
+public class UserRegisterDTO {
 
-    private int id;
     private String email;
     private String name;
     private String password;
     private LocalDate created_at;
     private LocalDate updated_at;
 
-    public int getId() {
-        return this.id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-    
     public String getEmail() {
         return this.email;
     }
@@ -58,5 +49,5 @@ public class UserDTO {
     public void setUpdated_at(LocalDate updated_at) {
         this.updated_at = updated_at;
     }
-    
+
 }

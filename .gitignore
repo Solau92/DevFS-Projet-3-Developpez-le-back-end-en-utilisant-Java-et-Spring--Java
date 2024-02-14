@@ -37,4 +37,4 @@ src/main/java/com/ChaTop/Rental/repository/RentalsRepository.java
 src/main/java/com/ChaTop/Rental/service/RentalsService.java
 src/main/java/com/ChaTop/Rental/configuration/CustomUserDetailsService.java
 src/main/java/com/ChaTop/Rental/controller/UsersController.java
-src/main/java/com/ChaTop/Rental/service/UsersService.java
+
