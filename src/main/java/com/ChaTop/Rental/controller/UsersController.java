@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.service.UsersService;
 
 @RestController
+@RequestMapping("/api/auth")
 public class UsersController {
 
     private UsersService usersService;
@@ -22,7 +24,7 @@ public class UsersController {
         this.usersService = usersService;
     }
 
-    @PostMapping("/api/auth/register")
+    @PostMapping("/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws Exception {
         log.info("api/register Create user : " + user.toString());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(usersService.saveUser(user));

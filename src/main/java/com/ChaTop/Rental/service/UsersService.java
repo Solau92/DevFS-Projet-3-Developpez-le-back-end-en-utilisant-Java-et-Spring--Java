@@ -1,9 +1,11 @@
 package com.ChaTop.Rental.service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ChaTop.Rental.entity.User;
@@ -16,8 +18,11 @@ public class UsersService {
 
     private static final Logger log = LoggerFactory.getLogger(UsersService.class);
 
-    public UsersService(UsersRepository usersRepository) {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UsersService(UsersRepository usersRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.usersRepository = usersRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public User saveUser(User user) throws Exception {
@@ -33,6 +38,12 @@ public class UsersService {
     
         }
         log.info("User with email {} successfully saved", user.getEmail());
+
+        user.setCreated_at(LocalDate.now());
+        user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
+        
+        // Retourner token ??
+
         return this.usersRepository.save(user);
     }
 

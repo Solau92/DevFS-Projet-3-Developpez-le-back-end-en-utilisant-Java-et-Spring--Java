@@ -1,9 +1,8 @@
-package com.ChaTop.Rental.entity;
+package com.ChaTop.Rental.DTO;
 
 public class UserDto {
 
     private String email;
-
     private String password;
 
     public String getEmail() {
@@ -21,6 +20,5 @@ public class UserDto {
     public void setPassword(String password) {
         this.password = password;
     }
-
 
 }
