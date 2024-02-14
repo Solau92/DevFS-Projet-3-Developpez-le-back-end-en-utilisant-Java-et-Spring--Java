@@ -10,4 +10,9 @@ public class RentalApplication {
 		SpringApplication.run(RentalApplication.class, args);
 	}
 
+	// @Bean
+	// public ModelMapper modelMapper() {
+	// 	return new ModelMapper();
+	// }
+
 }

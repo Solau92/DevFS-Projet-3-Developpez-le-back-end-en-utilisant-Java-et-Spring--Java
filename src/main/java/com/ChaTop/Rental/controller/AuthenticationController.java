@@ -15,6 +15,7 @@ import com.ChaTop.Rental.DTO.UserLoginDTO;
 import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.DTO.response.LoginResponse;
 import com.ChaTop.Rental.DTO.response.MeResponse;
+import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.service.JWTService;
@@ -39,13 +40,9 @@ public class AuthenticationController {
 
     @PostMapping(value="/login", produces = "application/json")
     public ResponseEntity<String> getToken(@RequestBody UserLoginDTO userLoginDto) throws BadCredentialsCustomException {
-        
-        // TODO vérifier user + mdp ou ERREUR
-        // Si user et mdp ok -> renvoyer token 
-        // Sinon : 401, {"message": "error"}
 
         // Intérêt de récupérer le User renvoyé ? 
-        usersService.authorizedUser(userLoginDto);
+        usersService.validateCredentials(userLoginDto);
 
         String token = jwtService.generateToken(userLoginDto);
         LoginResponse response = new LoginResponse(token);
@@ -54,9 +51,12 @@ public class AuthenticationController {
 
     @GetMapping(value="/me", produces = "application/json")
     public ResponseEntity<String> me(Authentication authentication) {
-        log.info(authentication.toString());
-        // TODO UserService pour récuperer les infos du user
-        MeResponse response = new MeResponse("1", "a@a.com", "a@a.com", "2024/02/13", "2024/02/13");
+
+        String email = authentication.getName();
+
+        User user = usersService.findByEmail(email);
+
+        MeResponse response = new MeResponse(String.valueOf(user.getId()), user.getName(), user.getEmail(), user.getCreated_at().toString(), user.getUpdated_at() == null ? null : user.getUpdated_at().toString());
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(gson.toJson(response));
     }
 

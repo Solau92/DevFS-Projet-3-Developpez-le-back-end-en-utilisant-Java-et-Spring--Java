@@ -10,6 +10,7 @@ public interface UsersService {
     
     public User saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException;
 
-    public User authorizedUser(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException;
+    public void validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException;
 
+    public User findByEmail(String email);
 }
