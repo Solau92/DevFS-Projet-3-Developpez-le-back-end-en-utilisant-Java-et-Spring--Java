@@ -13,6 +13,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
+import com.ChaTop.Rental.exception.UserNotFoundException;
 
 @ControllerAdvice
 public class ExceptionController {
@@ -33,6 +34,11 @@ public class ExceptionController {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(MESSAGE, ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class) 
+    public ResponseEntity<Object> exceptionHandler(UserNotFoundException ex, WebRequest request){
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
     
 }

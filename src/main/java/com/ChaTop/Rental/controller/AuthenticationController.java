@@ -18,6 +18,7 @@ import com.ChaTop.Rental.DTO.response.MeResponse;
 import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
+import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.service.JWTService;
 import com.ChaTop.Rental.service.UsersService;
 import com.nimbusds.jose.shaded.gson.Gson;
@@ -50,7 +51,7 @@ public class AuthenticationController {
     }
 
     @GetMapping(value="/me", produces = "application/json")
-    public ResponseEntity<String> me(Authentication authentication) {
+    public ResponseEntity<String> me(Authentication authentication) throws UserNotFoundException {
 
         String email = authentication.getName();
 

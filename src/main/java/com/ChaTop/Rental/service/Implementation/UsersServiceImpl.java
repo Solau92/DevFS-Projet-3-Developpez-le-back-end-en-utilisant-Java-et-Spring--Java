@@ -3,7 +3,6 @@ package com.ChaTop.Rental.service.Implementation;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,6 +13,7 @@ import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
+import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.repository.UsersRepository;
 import com.ChaTop.Rental.service.UsersService;
 
@@ -33,6 +33,7 @@ public class UsersServiceImpl implements UsersService {
         // this.modelMapper = modelMapper;
     }
 
+    @Override
     public User saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException {
         
         log.info("Trying to save user : " + userDTOToSave.toString());
@@ -57,6 +58,7 @@ public class UsersServiceImpl implements UsersService {
         return this.usersRepository.save(userToSave);
     }
 
+    @Override
     public void validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException {
 
         // Vérifier si on a un utilisateur en bdd avec cet email et ce mdp 
@@ -77,18 +79,33 @@ public class UsersServiceImpl implements UsersService {
         }
     }
 
-    public User findByEmail(String email) {
+    @Override
+    public User findByEmail(String email) throws UserNotFoundException {
         
         Optional<User> optionalUser = usersRepository.findByEmail(email);
             
         if(!optionalUser.isPresent()) {
             log.error("User not found");
-            // Quoi faire ?
+            // TODO : Quoi faire ?
+            throw new UserNotFoundException("User not found");
         }
 
-        User user = optionalUser.get();
+        return optionalUser.get();
+    }
 
-        return user;
+    @Override
+    public User findById(int id) throws UserNotFoundException {
+
+        Optional<User> optionalUser = usersRepository.findById(id);
+
+        if(!optionalUser.isPresent()) {
+            log.error("User not found");
+            // TODO : Quoi faire ?
+            throw new UserNotFoundException("User not found");
+        }
+
+        return optionalUser.get();
+         
     }
 
 }

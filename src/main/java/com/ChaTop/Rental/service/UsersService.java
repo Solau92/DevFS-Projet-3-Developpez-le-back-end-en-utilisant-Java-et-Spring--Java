@@ -5,6 +5,7 @@ import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
+import com.ChaTop.Rental.exception.UserNotFoundException;
 
 public interface UsersService {
     
@@ -12,5 +13,7 @@ public interface UsersService {
 
     public void validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException;
 
-    public User findByEmail(String email);
+    public User findByEmail(String email) throws UserNotFoundException ;
+
+    public User findById(int id) throws UserNotFoundException ;
 }
