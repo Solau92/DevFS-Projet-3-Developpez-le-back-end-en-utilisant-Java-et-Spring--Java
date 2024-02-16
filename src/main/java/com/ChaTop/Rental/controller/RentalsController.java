@@ -2,26 +2,19 @@ package com.ChaTop.Rental.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ChaTop.Rental.DTO.RentalDTO;
-import com.ChaTop.Rental.DTO.RentalRegisterDTO;
-import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.DTO.response.RentalAddResponse;
 import com.ChaTop.Rental.DTO.response.RentalsResponse;
-import com.ChaTop.Rental.entity.Rental;
 import com.ChaTop.Rental.service.RentalsService;
 import com.nimbusds.jose.shaded.gson.Gson;
 

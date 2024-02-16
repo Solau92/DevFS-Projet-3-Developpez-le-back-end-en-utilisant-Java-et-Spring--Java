@@ -33,3 +33,11 @@ build/
 .vscode/
 
 src/main/resources/static/Hellbee.png
+src/main/java/com/ChaTop/Rental/controller/MessageController.java
+src/main/java/com/ChaTop/Rental/entity/Message.java
+src/main/java/com/ChaTop/Rental/repository/MessagesRepository.java
+src/main/java/com/ChaTop/Rental/service/MessagesService.java
+src/main/java/com/ChaTop/Rental/service/Implementation/MessagesServiceImpl.java
+src/main/java/com/ChaTop/Rental/controller/MessagesController.java
+src/main/java/com/ChaTop/Rental/DTO/MessageRegisterDTO.java
+src/main/java/com/ChaTop/Rental/DTO/response/MessageAddResponse.java
