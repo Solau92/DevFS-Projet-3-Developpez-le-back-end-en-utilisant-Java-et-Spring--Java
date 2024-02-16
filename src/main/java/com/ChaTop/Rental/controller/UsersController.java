@@ -13,8 +13,11 @@ import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.service.UsersService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/user")
+@SecurityRequirement(name = "Bearer Authentication")
 public class UsersController {
 
     private UsersService usersService;

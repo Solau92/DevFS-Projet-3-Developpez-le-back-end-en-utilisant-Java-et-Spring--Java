@@ -15,12 +15,14 @@ import org.slf4j.LoggerFactory;
 import com.ChaTop.Rental.DTO.RentalDTO;
 import com.ChaTop.Rental.DTO.response.RentalAddResponse;
 import com.ChaTop.Rental.DTO.response.RentalsResponse;
-import com.ChaTop.Rental.entity.Rental;
 import com.ChaTop.Rental.service.RentalsService;
 import com.nimbusds.jose.shaded.gson.Gson;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/rentals")
+@SecurityRequirement(name = "Bearer Authentication")
 public class RentalsController {
 
     private RentalsService rentalsService;

@@ -15,9 +15,11 @@ import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.service.MessagesService;
 import com.nimbusds.jose.shaded.gson.Gson;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/messages")
-
+@SecurityRequirement(name = "Bearer Authentication")
 public class MessagesController {
 
     private MessagesService messagesService;
