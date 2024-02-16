@@ -21,7 +21,7 @@ public class ExceptionController {
 
     private static final String MESSAGE = "message";
 
-        private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
+    private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
 
 
     @ExceptionHandler(UserAlreadyExistsException.class) 
