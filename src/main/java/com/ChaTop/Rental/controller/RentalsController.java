@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.ChaTop.Rental.DTO.RentalDTO;
 import com.ChaTop.Rental.DTO.response.RentalAddResponse;
 import com.ChaTop.Rental.DTO.response.RentalsResponse;
+import com.ChaTop.Rental.entity.Rental;
 import com.ChaTop.Rental.service.RentalsService;
 import com.nimbusds.jose.shaded.gson.Gson;
 
@@ -35,18 +36,21 @@ public class RentalsController {
     @GetMapping("")
     public ResponseEntity<RentalsResponse> getAllRentals() {
         log.info("/rentals : Getting the list of all rentals");
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new RentalsResponse(rentalsService.getAllRentals()));       
+        return ResponseEntity.status(HttpStatus.OK).body(new RentalsResponse(rentalsService.getAllRentals()));       
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RentalDTO> getRental(@PathVariable int id) {
         log.info("/rentals/{} : Searching rental with id {}", id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(rentalsService.findById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(rentalsService.findById(id));
     }
 
+    // Not working, TODO
     @PostMapping("")
     // public ResponseEntity<String> addRental(@ModelAttribute("formData") RentalRegisterDTO rentalRegisterDTO) {
-        public ResponseEntity<String> addRental(@RequestParam("name") String name, @RequestParam("surface") String surface, @RequestParam("price") String price, @RequestParam("description") String description, @RequestParam("picture") MultipartFile file) {
+        public ResponseEntity<String> addRental(@RequestParam("name") String name, 
+        @RequestParam("surface") String surface, @RequestParam("price") String price, 
+        @RequestParam("description") String description, @RequestParam("picture") MultipartFile file) {
 
             log.info("name : {} ", name);
             log.info("picture : {}", file.toString());
@@ -56,7 +60,7 @@ public class RentalsController {
 
         // rentalsService.saveRental(rentalRegisterDTO);
         RentalAddResponse response = new RentalAddResponse();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 
 

@@ -41,3 +41,4 @@ src/main/java/com/ChaTop/Rental/service/Implementation/MessagesServiceImpl.java
 src/main/java/com/ChaTop/Rental/controller/MessagesController.java
 src/main/java/com/ChaTop/Rental/DTO/MessageRegisterDTO.java
 src/main/java/com/ChaTop/Rental/DTO/response/MessageAddResponse.java
+src/main/java/com/ChaTop/Rental/configuration/OpenAPI3Configuration.java

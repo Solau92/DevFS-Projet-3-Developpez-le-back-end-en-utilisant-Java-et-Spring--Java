@@ -25,13 +25,12 @@ public class UsersServiceImpl implements UsersService {
     private static final Logger log = LoggerFactory.getLogger(UsersServiceImpl.class);
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    // private final ModelMapper modelMapper;
 
     public UsersServiceImpl(UsersRepository usersRepository, BCryptPasswordEncoder bCryptPasswordEncoder /*, ModelMapper modelMapper */) {
         this.usersRepository = usersRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        // this.modelMapper = modelMapper;
     }
+
 
     @Override
     public User saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException {
@@ -49,10 +48,6 @@ public class UsersServiceImpl implements UsersService {
         userDTOToSave.setCreated_at(LocalDate.now());
         userDTOToSave.setPassword(this.bCryptPasswordEncoder.encode(userDTOToSave.getPassword()));
 
-        // Faire mapping : ModelMapper ?
-        // User userToSave = new User();
-        // modelMapper.map(userToSave, usersRepository);
-        // log.info(userToSave.toString());
         User userToSave = new User(userDTOToSave.getEmail(), userDTOToSave.getName(), userDTOToSave.getPassword(),userDTOToSave.getCreated_at());
 
         return this.usersRepository.save(userToSave);
@@ -61,9 +56,6 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException {
 
-        // Vérifier si on a un utilisateur en bdd avec cet email et ce mdp 
-        //Optional<User> optionalUser = this.findUserByEmailAndPassword(userLoginDTO.getEmail(), userLoginDTO.getPassword());
-        
         Optional<User> optionalUser = usersRepository.findByEmail(userLoginDTO.getEmail());
 
         if(!optionalUser.isPresent()) {

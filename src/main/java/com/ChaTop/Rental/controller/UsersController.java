@@ -24,11 +24,11 @@ public class UsersController {
     public UsersController(UsersService usersService) {
         this.usersService = usersService;
     }
-
-    @GetMapping("/{id}") // Renvoyer DTO ??????
+   
+    @GetMapping("/{id}") // TODO: Renvoyer DTO ??????
     public ResponseEntity<User> getUser(@PathVariable int id) throws UserNotFoundException {
         log.info("Searching user with id {}", id);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(usersService.findById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(usersService.findById(id));
     }
 
 }
