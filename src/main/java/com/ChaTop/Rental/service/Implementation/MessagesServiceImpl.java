@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.entity.Message;
+import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.repository.MessagesRepository;
 import com.ChaTop.Rental.service.MessagesService;
 
@@ -23,14 +24,19 @@ public class MessagesServiceImpl implements MessagesService {
     }
 
     @Override
-    public Message saveMessage(MessageRegisterDTO messageRegisterDTO) {
+    public Message saveMessage(MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
 
         log.info("Trying to save message : {}", messageRegisterDTO);
 
-        // Gérer erreurs ? TODO : renvoyer erreur 400
+        // Gérer erreurs, TODO : mais quand renvoyer erreur 400 ? 
+        boolean error = false;
+
+        if(error) {
+            log.info("Error saving message");
+            throw new ErrorSavingMessageException("Error when saving message");
+        }
 
         Message messageToSave = new Message(messageRegisterDTO.getRental_id(), messageRegisterDTO.getUser_id(), messageRegisterDTO.getMessage(), LocalDate.now());
-        log.info("Trying to save message : {}", messageToSave);
         // void ? 
         return messagesRepository.save(messageToSave);
     } 

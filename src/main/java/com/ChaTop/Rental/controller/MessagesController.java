@@ -11,16 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.DTO.response.MessageAddResponse;
-import com.ChaTop.Rental.entity.Rental;
+import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.service.MessagesService;
 import com.nimbusds.jose.shaded.gson.Gson;
-
-// import io.swagger.v3.oas.annotations.Operation;
-// import io.swagger.v3.oas.annotations.media.Content;
-// import io.swagger.v3.oas.annotations.media.Schema;
-// import io.swagger.v3.oas.annotations.responses.ApiResponse;
-// import io.swagger.v3.oas.annotations.responses.ApiResponses;
-// import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/api/messages")
@@ -38,7 +31,7 @@ public class MessagesController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> addMessage(@RequestBody MessageRegisterDTO messageRegisterDTO) {
+    public ResponseEntity<String> addMessage(@RequestBody MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
 
         log.info("api/messages : Create message : {}", messageRegisterDTO.toString());
         messagesService.saveMessage(messageRegisterDTO);
