@@ -31,9 +31,14 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/java/com/ChaTop/Rental/controller/RentalsController.java
-src/main/java/com/ChaTop/Rental/entity/Rental.java
-src/main/java/com/ChaTop/Rental/repository/RentalsRepository.java
-src/main/java/com/ChaTop/Rental/service/RentalsService.java
-src/main/java/com/ChaTop/Rental/configuration/CustomUserDetailsService.java
 
+src/main/resources/static/Hellbee.png
+src/main/java/com/ChaTop/Rental/controller/MessageController.java
+src/main/java/com/ChaTop/Rental/entity/Message.java
+src/main/java/com/ChaTop/Rental/repository/MessagesRepository.java
+src/main/java/com/ChaTop/Rental/service/MessagesService.java
+src/main/java/com/ChaTop/Rental/service/Implementation/MessagesServiceImpl.java
+src/main/java/com/ChaTop/Rental/controller/MessagesController.java
+src/main/java/com/ChaTop/Rental/DTO/MessageRegisterDTO.java
+src/main/java/com/ChaTop/Rental/DTO/response/MessageAddResponse.java
+src/main/java/com/ChaTop/Rental/configuration/OpenAPI3Configuration.java

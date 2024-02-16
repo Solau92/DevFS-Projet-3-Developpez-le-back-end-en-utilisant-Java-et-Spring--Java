@@ -64,7 +64,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegisterDTO userRegisterDTO) throws UserAlreadyExistsException {
         
-        log.info("api/register Create user : " + userRegisterDTO.toString());
+        log.info("api/register Create user : {}", userRegisterDTO.toString());
         
         usersService.saveUser(userRegisterDTO);
         
