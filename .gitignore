@@ -31,4 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-src/main/java/com/ChaTop/Rental/configuration/OpenAPI3Configuration.java
