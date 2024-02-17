@@ -23,6 +23,13 @@ import com.ChaTop.Rental.service.JWTService;
 import com.ChaTop.Rental.service.UsersService;
 import com.nimbusds.jose.shaded.gson.Gson;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationController {
@@ -39,6 +46,11 @@ public class AuthenticationController {
         this.usersService = usersService;
     }
 
+    @Operation(summary = "Login", description = "Login process")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json") }, description = "User successfully loged in"),
+        @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
+    })
     @PostMapping(value="/login", produces = "application/json")
     public ResponseEntity<String> getToken(@RequestBody UserLoginDTO userLoginDto) throws BadCredentialsCustomException {
 
@@ -47,9 +59,15 @@ public class AuthenticationController {
 
         String token = jwtService.generateToken(userLoginDto);
         LoginResponse response = new LoginResponse(token);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 
+    @Operation(summary = "Getting user information", description = "Getting logged user information")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = MeResponse.class), mediaType = "application/json") }, description = "Information of user successfully obtained"),
+        @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
+    })
+    @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value="/me", produces = "application/json")
     public ResponseEntity<String> me(Authentication authentication) throws UserNotFoundException {
 
@@ -58,9 +76,14 @@ public class AuthenticationController {
         User user = usersService.findByEmail(email);
 
         MeResponse response = new MeResponse(String.valueOf(user.getId()), user.getName(), user.getEmail(), user.getCreated_at().toString(), user.getUpdated_at() == null ? null : user.getUpdated_at().toString());
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 
+    @Operation(summary = "Register", description = "Register process")
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json") }, description = "User successfully registred"),
+        @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
+    })
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserRegisterDTO userRegisterDTO) throws UserAlreadyExistsException {
         
@@ -71,7 +94,7 @@ public class AuthenticationController {
         UserLoginDTO userLoginDTO = new UserLoginDTO(userRegisterDTO.getEmail(), userRegisterDTO.getPassword());
         String token = jwtService.generateToken(userLoginDTO);
         LoginResponse response = new LoginResponse(token);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 
 }
