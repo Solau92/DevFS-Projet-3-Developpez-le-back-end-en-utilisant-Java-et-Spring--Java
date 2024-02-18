@@ -31,11 +31,11 @@ public class User {
     private String password;
 
     @Column
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy/MM/dd")
     private LocalDate created_at;
 
     @Column
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy/MM/dd")
     private LocalDate updated_at;
 
     public User() {

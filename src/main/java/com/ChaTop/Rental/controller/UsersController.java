@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ChaTop.Rental.entity.Rental;
+import com.ChaTop.Rental.DTO.UserDTO;
 import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.service.UsersService;
@@ -39,8 +39,8 @@ public class UsersController {
         @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = User.class), mediaType = "application/json") }, description = "User successfully obtained"),
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     })      
-    @GetMapping("/{id}") // TODO: Renvoyer DTO ??????
-    public ResponseEntity<User> getUser(@PathVariable int id) throws UserNotFoundException {
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUser(@PathVariable int id) throws UserNotFoundException {
         log.info("Searching user with id {}", id);
         return ResponseEntity.status(HttpStatus.OK).body(usersService.findById(id));
     }
