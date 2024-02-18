@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.StringUtils;
@@ -31,6 +32,12 @@ public class RentalsServiceImpl implements RentalsService {
     private UsersService usersService;
 
     private static final Logger log = LoggerFactory.getLogger(RentalsServiceImpl.class);
+
+    @Value("${picture-upload-directory}")
+    private String uploadDir;
+
+    @Value("${picture-upload-directory-path}")
+    private String uploadDirPath;
 
     public RentalsServiceImpl(RentalsRepository rentalsRepository, UsersService usersService) {
         this.rentalsRepository = rentalsRepository;
@@ -57,7 +64,7 @@ public class RentalsServiceImpl implements RentalsService {
 
         Optional<Rental> optionalRental = rentalsRepository.findById(id);
 
-        // Gérer erreur ? 
+        // TODO question : Gérer erreur ? 
         Rental rental = optionalRental.get();
         String[] picture = {rental.getPicture()};
         RentalDTOTabPicture rentalDTO = new RentalDTOTabPicture(rental.getId(), rental.getName(), rental.getSurface(), rental.getPrice(), rental.getDescription(), rental.getOwner_id(), rental.getCreated_at(), rental.getUpdated_at(), picture);
@@ -113,28 +120,24 @@ public class RentalsServiceImpl implements RentalsService {
     private String uploadFileAndReturnURL(MultipartFile pictureFile) throws IOException {
 
         String fileName = StringUtils.cleanPath(pictureFile.getOriginalFilename());
-
-        String uploadDir = "rental-pictures";
-
-        Path uploadPath = Paths.get("src/main/resources/static/" + uploadDir);
+        
+        Path uploadPath = Paths.get(uploadDirPath + uploadDir);
 
         if(!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
-        String URL = "http://localhost:3001/" + uploadDir + "/" + fileName;
+        //TODO : voir URL + changer nom image ? 
+
+        String URL = "http://localhost:3001/api/rentals" + uploadDir + "/" + fileName;
 
         try (InputStream inputStream = pictureFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
-            log.info("FilePath : " + filePath);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {        
             throw new IOException("Could not save image file: " + fileName, ioe);
         }       
 
-        log.info("UploadPath :" + uploadPath);
-        
-        log.info("URL : " + URL);
         return URL;
 
     }

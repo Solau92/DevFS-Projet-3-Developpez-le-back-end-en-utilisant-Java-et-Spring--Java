@@ -1,8 +1,14 @@
 package com.ChaTop.Rental.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +55,12 @@ public class RentalsController {
 
     private Gson gson = new Gson();
 
+    @Value("${picture-upload-directory}")
+    private String uploadDir;
+
+    @Value("${picture-upload-directory-path}")
+    private String uploadDirPath;
+
     public RentalsController(RentalsService rentalsService) {
         this.rentalsService = rentalsService;
     }
@@ -71,7 +87,7 @@ public class RentalsController {
         return ResponseEntity.status(HttpStatus.OK).body(rentalsService.findById(id));
     }
 
-    // Not working, TODO
+    // Not working properly, TODO
     @Operation(summary = "Saving a new rental", description = "Saving the given new rental")
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json") }, description = "Rental successfully saved"),
@@ -109,5 +125,28 @@ public class RentalsController {
         
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
        }
+
+       @GetMapping("/rental-pictures/{fileName:.+}")
+        public ResponseEntity <Resource> downloadFile(@PathVariable String fileName) throws FileNotFoundException {
+        // FileMetaData fileData = fileStorageService.getFile(fileName);
+
+        //String uploadDir = "rental-pictures";
+        // Path uploadPath = Paths.get("src/main/resources/static/" + uploadDir);
+        
+        Path uploadPath = Paths.get(uploadDirPath + uploadDir + '/' + fileName);
+        Resource resource = null;
+        try {
+            resource = new UrlResource(uploadPath.toUri());
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + fileName + "\"")
+            .contentType(MediaType.parseMediaType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+            .body(resource);
+    }
 
 }
