@@ -2,13 +2,13 @@ package com.ChaTop.Rental.DTO.response;
 
 import java.util.List;
 
-import com.ChaTop.Rental.entity.Rental;
+import com.ChaTop.Rental.DTO.RentalDTOPicture;
 
 public class RentalsResponse {
     
-    public List<Rental> rentals; 
+    public List<RentalDTOPicture> rentals; 
 
-        public RentalsResponse(List<Rental> rentals) {
+        public RentalsResponse(List<RentalDTOPicture> rentals) {
             this.rentals = rentals;
         }
 }

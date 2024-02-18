@@ -23,12 +23,13 @@ public class MessagesServiceImpl implements MessagesService {
         this.messagesRepository = messagesRepository;
     }
 
+    // TODO question : Return void ?
     @Override
-    public Message saveMessage(MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
+    public void saveMessage(MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
 
         log.info("Trying to save message : {}", messageRegisterDTO);
 
-        // Gérer erreurs, TODO : mais quand renvoyer erreur 400 ? 
+        // TODO question : gérer erreurs, mais quand renvoyer erreur 400 ? 
         boolean error = false;
 
         if(error) {
@@ -37,7 +38,8 @@ public class MessagesServiceImpl implements MessagesService {
         }
 
         Message messageToSave = new Message(messageRegisterDTO.getRental_id(), messageRegisterDTO.getUser_id(), messageRegisterDTO.getMessage(), LocalDate.now());
-        // void ? 
-        return messagesRepository.save(messageToSave);
+
+        messagesRepository.save(messageToSave);
+
     } 
 }

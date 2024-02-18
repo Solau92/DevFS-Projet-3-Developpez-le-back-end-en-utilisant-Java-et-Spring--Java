@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.ChaTop.Rental.DTO.UserDTO;
 import com.ChaTop.Rental.DTO.UserLoginDTO;
 import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.entity.User;
@@ -31,9 +32,9 @@ public class UsersServiceImpl implements UsersService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-
+    // TODO question : Return void ?
     @Override
-    public User saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException {
+    public void saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException {
         
         log.info("Trying to save user : " + userDTOToSave.toString());
 
@@ -50,7 +51,7 @@ public class UsersServiceImpl implements UsersService {
 
         User userToSave = new User(userDTOToSave.getEmail(), userDTOToSave.getName(), userDTOToSave.getPassword(),userDTOToSave.getCreated_at());
 
-        return this.usersRepository.save(userToSave);
+        this.usersRepository.save(userToSave);
     }
 
     @Override
@@ -72,32 +73,43 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User findByEmail(String email) throws UserNotFoundException {
+    public UserDTO findByEmail(String email) throws UserNotFoundException {
         
         Optional<User> optionalUser = usersRepository.findByEmail(email);
             
         if(!optionalUser.isPresent()) {
             log.error("User not found");
-            // TODO : Quoi faire ?
+            // TODO question : Quoi faire ?
             throw new UserNotFoundException("User not found");
         }
 
-        return optionalUser.get();
+        User user = optionalUser.get();
+
+        // TODO : mapping 
+        // TODO question : Que faire pour le mdp ?
+        UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getCreated_at(), user.getUpdated_at() == null ? null : user.getUpdated_at());
+
+        return userDTO;
     }
 
     @Override
-    public User findById(int id) throws UserNotFoundException {
+    public UserDTO findById(int id) throws UserNotFoundException {
 
         Optional<User> optionalUser = usersRepository.findById(id);
 
         if(!optionalUser.isPresent()) {
             log.error("User not found");
-            // TODO : Quoi faire ?
+            // TODO question : Quoi faire ?
             throw new UserNotFoundException("User not found");
         }
 
-        return optionalUser.get();
-         
+        User user = optionalUser.get();
+
+        // TODO : mapping 
+        // TODO question : Que faire pour le mdp ?
+        UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getCreated_at(), user.getUpdated_at() == null ? null : user.getUpdated_at());
+
+        return userDTO;   
     }
 
 }

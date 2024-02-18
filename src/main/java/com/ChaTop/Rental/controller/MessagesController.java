@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.DTO.response.MessageAddResponse;
-import com.ChaTop.Rental.entity.Rental;
 import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.service.MessagesService;
 import com.nimbusds.jose.shaded.gson.Gson;

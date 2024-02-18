@@ -2,28 +2,25 @@ package com.ChaTop.Rental.DTO;
 
 import java.time.LocalDate;
 
-public class RentalDTO {
+public abstract class RentalDTO {
 
     private int id;
     private String name;
     private double surface;
     private double price;
-    private String[] picture;
     private String description;
     private int owner_id;
     private LocalDate created_at;
     private LocalDate updated_at;
 
-
     public RentalDTO() {
     }
 
-    public RentalDTO(int id, String name, double surface, double price, String[] picture, String description, int owner_id, LocalDate created_at, LocalDate updated_at) {
+    public RentalDTO(int id, String name, double surface, double price, String description, int owner_id, LocalDate created_at, LocalDate updated_at) {
         this.id = id;
         this.name = name;
         this.surface = surface;
         this.price = price;
-        this.picture = picture;
         this.description = description;
         this.owner_id = owner_id;
         this.created_at = created_at;
@@ -60,14 +57,6 @@ public class RentalDTO {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    public String[] getPicture() {
-        return this.picture;
-    }
-
-    public void setPicture(String[] picture) {
-        this.picture = picture;
     }
 
     public String getDescription() {

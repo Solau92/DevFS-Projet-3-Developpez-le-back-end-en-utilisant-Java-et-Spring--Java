@@ -1,7 +1,14 @@
 package com.ChaTop.Rental.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,13 +17,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ChaTop.Rental.DTO.RentalDTO;
+import com.ChaTop.Rental.DTO.RentalRegisterDTO;
+import com.ChaTop.Rental.DTO.RentalUpdateDTO;
 import com.ChaTop.Rental.DTO.response.RentalAddResponse;
+import com.ChaTop.Rental.DTO.response.RentalUpdateResponse;
 import com.ChaTop.Rental.DTO.response.RentalsResponse;
-import com.ChaTop.Rental.entity.Rental;
+import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.service.RentalsService;
 import com.nimbusds.jose.shaded.gson.Gson;
 
@@ -37,6 +54,12 @@ public class RentalsController {
     private static final Logger log = LoggerFactory.getLogger(RentalsController.class);
 
     private Gson gson = new Gson();
+
+    @Value("${picture-upload-directory}")
+    private String uploadDir;
+
+    @Value("${picture-upload-directory-path}")
+    private String uploadDirPath;
 
     public RentalsController(RentalsService rentalsService) {
         this.rentalsService = rentalsService;
@@ -64,39 +87,66 @@ public class RentalsController {
         return ResponseEntity.status(HttpStatus.OK).body(rentalsService.findById(id));
     }
 
-    // Not working, TODO
+    // Not working properly, TODO
     @Operation(summary = "Saving a new rental", description = "Saving the given new rental")
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json") }, description = "Rental successfully saved"),
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     }) 
     @PostMapping("")
-    // public ResponseEntity<String> addRental(@ModelAttribute("formData")
-    // RentalRegisterDTO rentalRegisterDTO) {
-    public ResponseEntity<String> addRental(@RequestParam("name") String name,
+    public ResponseEntity<String> addRental(Authentication authentication, @RequestParam("name") String name,
             @RequestParam("surface") String surface, @RequestParam("price") String price,
-            @RequestParam("description") String description, @RequestParam("picture") MultipartFile file) {
+            @RequestParam("description") String description, @RequestParam("picture") MultipartFile pictureFile) throws UserNotFoundException, IOException {
 
-        log.info("name : {} ", name);
-        log.info("picture : {}", file.toString());
+        // Pour récup (in fine) le owner_id
+        String ownerEmail = authentication.getName();
 
-        // rentalRegisterDTO.setPicture("https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg");
-        // log.info("/rentals : Create rental {}", rentalRegisterDTO.toString());
+        RentalRegisterDTO rentalRegisterDTO = new RentalRegisterDTO(name, surface, price, pictureFile, description, ownerEmail);
+        rentalsService.saveRental(rentalRegisterDTO);
 
-        // rentalsService.saveRental(rentalRegisterDTO);
         RentalAddResponse response = new RentalAddResponse();
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 
-       // TODO
        @Operation(summary = "Updating a rental", description = "Updating a rental")
        @ApiResponses({
            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json") }, description = "Rental successfully updated"),
            @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
        }) 
-       @PutMapping("")
-       public ResponseEntity<String> updateRental() {
-        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(""));
+       @PutMapping("/{id}")
+       public ResponseEntity<String> updateRental(@PathVariable int id, @RequestParam("name") String name,
+       @RequestParam("surface") String surface, @RequestParam("price") String price,
+       @RequestParam("description") String description) {
+
+        RentalUpdateDTO rentalUpdateDTO = new RentalUpdateDTO(id, name, surface, price, description);
+        rentalsService.updateRental(rentalUpdateDTO);
+
+        RentalUpdateResponse response = new RentalUpdateResponse();
+        
+        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
        }
+
+       @GetMapping("/rental-pictures/{fileName:.+}")
+        public ResponseEntity <Resource> downloadFile(@PathVariable String fileName) throws FileNotFoundException {
+        // FileMetaData fileData = fileStorageService.getFile(fileName);
+
+        //String uploadDir = "rental-pictures";
+        // Path uploadPath = Paths.get("src/main/resources/static/" + uploadDir);
+        
+        Path uploadPath = Paths.get(uploadDirPath + uploadDir + '/' + fileName);
+        Resource resource = null;
+        try {
+            resource = new UrlResource(uploadPath.toUri());
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + fileName + "\"")
+            .contentType(MediaType.parseMediaType(MediaType.APPLICATION_FORM_URLENCODED_VALUE))
+            .body(resource);
+    }
 
 }

@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ChaTop.Rental.DTO.UserDTO;
 import com.ChaTop.Rental.DTO.UserLoginDTO;
 import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.DTO.response.LoginResponse;
 import com.ChaTop.Rental.DTO.response.MeResponse;
-import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
@@ -54,7 +54,6 @@ public class AuthenticationController {
     @PostMapping(value="/login", produces = "application/json")
     public ResponseEntity<String> getToken(@RequestBody UserLoginDTO userLoginDto) throws BadCredentialsCustomException {
 
-        // Intérêt de récupérer le User renvoyé ? 
         usersService.validateCredentials(userLoginDto);
 
         String token = jwtService.generateToken(userLoginDto);
@@ -73,9 +72,10 @@ public class AuthenticationController {
 
         String email = authentication.getName();
 
-        User user = usersService.findByEmail(email);
+        UserDTO user = usersService.findByEmail(email);
 
-        MeResponse response = new MeResponse(String.valueOf(user.getId()), user.getName(), user.getEmail(), user.getCreated_at().toString(), user.getUpdated_at() == null ? null : user.getUpdated_at().toString());
+        //TODO : mapping ?
+        MeResponse response = new MeResponse(user.getId(), user.getName(), user.getEmail(), user.getCreated_at().toString(), user.getUpdated_at() == null ? null : user.getUpdated_at().toString());
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 

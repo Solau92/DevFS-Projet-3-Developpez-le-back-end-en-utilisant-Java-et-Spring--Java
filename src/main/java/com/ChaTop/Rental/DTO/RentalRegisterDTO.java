@@ -2,16 +2,28 @@ package com.ChaTop.Rental.DTO;
 
 import java.time.LocalDate;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class RentalRegisterDTO {
 
     private String name;
-    private double surface;
-    private double price;
-    private String picture;
+    private String surface;
+    private String price;
+    private MultipartFile picture;
     private String description;
-    private int owner_id;
-    private LocalDate created_at;
-    private LocalDate updated_at;
+    private String ownerEmail;
+    // private LocalDate created_at;
+    // private LocalDate updated_at;
+
+    public RentalRegisterDTO(String name, String surface, String price, MultipartFile picture, String description, String ownerEmail) {
+        this.name = name;
+        this.surface = surface;
+        this.price = price;
+        this.picture = picture;
+        this.description = description;
+        this.ownerEmail = ownerEmail;
+    }
+
 
     public String getName() {
         return this.name;
@@ -21,27 +33,27 @@ public class RentalRegisterDTO {
         this.name = name;
     }
 
-    public double getSurface() {
+    public String getSurface() {
         return this.surface;
     }
 
-    public void setSurface(double surface) {
+    public void setSurface(String surface) {
         this.surface = surface;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return this.price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public String getPicture() {
+    public MultipartFile getPicture() {
         return this.picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(MultipartFile picture) {
         this.picture = picture;
     }
 
@@ -53,28 +65,36 @@ public class RentalRegisterDTO {
         this.description = description;
     }
 
-    public int getOwner_id() {
-        return this.owner_id;
+    public String getOwnerEmail() {
+        return this.ownerEmail;
     }
 
-    public void setOwner_id(int owner_id) {
-        this.owner_id = owner_id;
+    public void setOwner_id(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
     }
 
-    public LocalDate getCreated_at() {
-        return this.created_at;
-    }
+    // public int getOwner_id() {
+    //     return this.owner_id;
+    // }
 
-    public void setCreated_at(LocalDate created_at) {
-        this.created_at = created_at;
-    }
+    // public void setOwner_id(int owner_id) {
+    //     this.owner_id = owner_id;
+    // }
 
-    public LocalDate getUpdated_at() {
-        return this.updated_at;
-    }
+    // public LocalDate getCreated_at() {
+    //     return this.created_at;
+    // }
 
-    public void setUpdated_at(LocalDate updated_at) {
-        this.updated_at = updated_at;
-    }
+    // public void setCreated_at(LocalDate created_at) {
+    //     this.created_at = created_at;
+    // }
+
+    // public LocalDate getUpdated_at() {
+    //     return this.updated_at;
+    // }
+
+    // public void setUpdated_at(LocalDate updated_at) {
+    //     this.updated_at = updated_at;
+    // }
     
 }
