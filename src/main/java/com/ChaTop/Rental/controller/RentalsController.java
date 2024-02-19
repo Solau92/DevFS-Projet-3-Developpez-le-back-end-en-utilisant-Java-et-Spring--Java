@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -87,10 +86,9 @@ public class RentalsController {
         return ResponseEntity.status(HttpStatus.OK).body(rentalsService.findById(id));
     }
 
-    // Not working properly, TODO
     @Operation(summary = "Saving a new rental", description = "Saving the given new rental")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json") }, description = "Rental successfully saved"),
+        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = RentalAddResponse.class), mediaType = "application/json") }, description = "Rental successfully saved"),
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     }) 
     @PostMapping("")
@@ -110,7 +108,7 @@ public class RentalsController {
 
        @Operation(summary = "Updating a rental", description = "Updating a rental")
        @ApiResponses({
-           @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json") }, description = "Rental successfully updated"),
+           @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = RentalUpdateResponse.class), mediaType = "application/json") }, description = "Rental successfully updated"),
            @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
        }) 
        @PutMapping("/{id}")
@@ -126,12 +124,9 @@ public class RentalsController {
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
        }
 
+       @Operation(description = "Method used to display pictures", hidden = true)
        @GetMapping("/rental-pictures/{fileName:.+}")
-        public ResponseEntity <Resource> downloadFile(@PathVariable String fileName) throws FileNotFoundException {
-        // FileMetaData fileData = fileStorageService.getFile(fileName);
-
-        //String uploadDir = "rental-pictures";
-        // Path uploadPath = Paths.get("src/main/resources/static/" + uploadDir);
+        public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws FileNotFoundException {
         
         Path uploadPath = Paths.get(uploadDirPath + uploadDir + '/' + fileName);
         Resource resource = null;

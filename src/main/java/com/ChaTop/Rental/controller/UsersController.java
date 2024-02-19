@@ -36,7 +36,7 @@ public class UsersController {
    
     @Operation(summary = "Getting a user", description = "Getting a user, given his id")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = User.class), mediaType = "application/json") }, description = "User successfully obtained"),
+        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserDTO.class), mediaType = "application/json") }, description = "User successfully obtained"),
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     })      
     @GetMapping("/{id}")

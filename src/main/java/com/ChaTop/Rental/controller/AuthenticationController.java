@@ -17,6 +17,7 @@ import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.DTO.response.LoginResponse;
 import com.ChaTop.Rental.DTO.response.MeResponse;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
+import com.ChaTop.Rental.exception.ErrorSavingUserException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.service.JWTService;
@@ -29,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -81,11 +83,11 @@ public class AuthenticationController {
 
     @Operation(summary = "Register", description = "Register process")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = String.class), mediaType = "application/json") }, description = "User successfully registred"),
+        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json") }, description = "User successfully registred"),
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     })
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserRegisterDTO userRegisterDTO) throws UserAlreadyExistsException {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegisterDTO userRegisterDTO) throws UserAlreadyExistsException, ErrorSavingUserException {
         
         log.info("api/register Create user : {}", userRegisterDTO.toString());
         

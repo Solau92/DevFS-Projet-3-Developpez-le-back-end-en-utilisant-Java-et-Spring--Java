@@ -3,6 +3,7 @@ package com.ChaTop.Rental.service.Implementation;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,10 +14,13 @@ import com.ChaTop.Rental.DTO.UserLoginDTO;
 import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
+import com.ChaTop.Rental.exception.ErrorSavingUserException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.repository.UsersRepository;
 import com.ChaTop.Rental.service.UsersService;
+
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -34,7 +38,7 @@ public class UsersServiceImpl implements UsersService {
 
     // TODO question : Return void ?
     @Override
-    public void saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException {
+    public void saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException, ErrorSavingUserException {
         
         log.info("Trying to save user : " + userDTOToSave.toString());
 
@@ -44,14 +48,28 @@ public class UsersServiceImpl implements UsersService {
             log.error("User with email {} already exists", userDTOToSave.getEmail());
             throw new UserAlreadyExistsException("User with email " + userDTOToSave.getEmail() + " already exists "); 
         }
-        log.info("User with email {} successfully saved", userDTOToSave.getEmail());
-
-        userDTOToSave.setCreated_at(LocalDate.now());
+        
         userDTOToSave.setPassword(this.bCryptPasswordEncoder.encode(userDTOToSave.getPassword()));
 
-        User userToSave = new User(userDTOToSave.getEmail(), userDTOToSave.getName(), userDTOToSave.getPassword(),userDTOToSave.getCreated_at());
+        // User userToSave = new User(userDTOToSave.getEmail(), userDTOToSave.getName(), userDTOToSave.getPassword(),LocalDate.now());
 
-        this.usersRepository.save(userToSave);
+        // TODO done : Mapper 
+        ModelMapper mapper = new ModelMapper();
+        User userToSave = mapper.map(userDTOToSave, User.class);
+        userToSave.setCreated_at(LocalDate.now());
+
+        // log.info("DTO : {}", userDTOToSave);
+        // log.info("User : {}", userToSave);
+
+        try {
+            this.usersRepository.save(userToSave);
+        } catch (ConstraintViolationException Exc) {
+            log.error("Constraint violation exception");
+            throw new ErrorSavingUserException("Error saving user");
+        }
+        
+        log.info("User with email {} successfully saved", userDTOToSave.getEmail());
+        
     }
 
     @Override
@@ -86,7 +104,6 @@ public class UsersServiceImpl implements UsersService {
         User user = optionalUser.get();
 
         // TODO : mapping 
-        // TODO question : Que faire pour le mdp ?
         UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getCreated_at(), user.getUpdated_at() == null ? null : user.getUpdated_at());
 
         return userDTO;
@@ -106,7 +123,6 @@ public class UsersServiceImpl implements UsersService {
         User user = optionalUser.get();
 
         // TODO : mapping 
-        // TODO question : Que faire pour le mdp ?
         UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getCreated_at(), user.getUpdated_at() == null ? null : user.getUpdated_at());
 
         return userDTO;   

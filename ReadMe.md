@@ -77,7 +77,10 @@ To run the app, go to the folder that contains the pom.xml file and execute the 
 
 Navigate to http://localhost:4200 to access the whole app.
 
-NB : the passwords of all users in database are "password".
+NB : 
+- the passwords of all users in database are "password"
+- if you want to test the app, you can use theses credentials : 
+---------------------------------
 
 
 ## Version

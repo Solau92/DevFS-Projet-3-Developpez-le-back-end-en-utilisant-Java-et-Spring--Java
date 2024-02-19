@@ -1,14 +1,18 @@
 package com.ChaTop.Rental.DTO;
 
-import java.time.LocalDate;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public class UserRegisterDTO {
 
+    @Email
     private String email;
+
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String password;
-    private LocalDate created_at;
-    private LocalDate updated_at;
 
     public String getEmail() {
         return this.email;
@@ -34,20 +38,13 @@ public class UserRegisterDTO {
         this.password = password;
     }
 
-    public LocalDate getCreated_at() {
-        return this.created_at;
-    }
-
-    public void setCreated_at(LocalDate created_at) {
-        this.created_at = created_at;
-    }
-
-    public LocalDate getUpdated_at() {
-        return this.updated_at;
-    }
-
-    public void setUpdated_at(LocalDate updated_at) {
-        this.updated_at = updated_at;
+    @Override
+    public String toString() {
+        return "{" +
+            " email='" + getEmail() + "'" +
+            ", name='" + getName() + "'" +
+            ", password='" + getPassword() + "'" +
+            "}";
     }
 
 }

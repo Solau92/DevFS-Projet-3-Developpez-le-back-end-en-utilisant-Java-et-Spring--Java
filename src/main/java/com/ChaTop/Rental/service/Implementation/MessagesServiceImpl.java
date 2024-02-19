@@ -2,8 +2,10 @@ package com.ChaTop.Rental.service.Implementation;
 
 import java.time.LocalDate;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
@@ -37,7 +39,12 @@ public class MessagesServiceImpl implements MessagesService {
             throw new ErrorSavingMessageException("Error when saving message");
         }
 
-        Message messageToSave = new Message(messageRegisterDTO.getRental_id(), messageRegisterDTO.getUser_id(), messageRegisterDTO.getMessage(), LocalDate.now());
+        // TODO done : Mapper 
+        ModelMapper mapper = new ModelMapper();
+        Message messageToSave = mapper.map(messageRegisterDTO, Message.class);
+        messageToSave.setCreated_at(LocalDate.now());
+
+        // Message messageToSave = new Message(messageRegisterDTO.getRental_id(), messageRegisterDTO.getUser_id(), messageRegisterDTO.getMessage(), LocalDate.now());
 
         messagesRepository.save(messageToSave);
 

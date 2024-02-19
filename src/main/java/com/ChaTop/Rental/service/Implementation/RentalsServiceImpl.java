@@ -39,6 +39,9 @@ public class RentalsServiceImpl implements RentalsService {
     @Value("${picture-upload-directory-path}")
     private String uploadDirPath;
 
+    @Value("${root-url}")
+    private String rootUrl;
+
     public RentalsServiceImpl(RentalsRepository rentalsRepository, UsersService usersService) {
         this.rentalsRepository = rentalsRepository;
         this.usersService = usersService;
@@ -67,6 +70,8 @@ public class RentalsServiceImpl implements RentalsService {
         // TODO question : Gérer erreur ? 
         Rental rental = optionalRental.get();
         String[] picture = {rental.getPicture()};
+
+        //TO DO : mapping 
         RentalDTOTabPicture rentalDTO = new RentalDTOTabPicture(rental.getId(), rental.getName(), rental.getSurface(), rental.getPrice(), rental.getDescription(), rental.getOwner_id(), rental.getCreated_at(), rental.getUpdated_at(), picture);
 
         return rentalDTO;
@@ -76,6 +81,8 @@ public class RentalsServiceImpl implements RentalsService {
     public void saveRental(RentalRegisterDTO rentalDTOToSave) throws UserNotFoundException, IOException {
 
         Rental rentalToSave = new Rental();
+
+        //TO DO : mapping 
 
         // Transformer champs String --> int 
         rentalToSave.setPrice(Integer.valueOf(rentalDTOToSave.getPrice()));
@@ -101,6 +108,7 @@ public class RentalsServiceImpl implements RentalsService {
         
         RentalDTOTabPicture rentalDTO = this.findById(rentalUpdateDTO.getId());
 
+        //TO DO : mapping 
         Rental rentalToUpdate = new Rental();
 
         // Set tous les chames et transformer champs String --> int 
@@ -127,9 +135,9 @@ public class RentalsServiceImpl implements RentalsService {
             Files.createDirectories(uploadPath);
         }
 
-        //TODO : voir URL + changer nom image ? 
+        //TODO question : changer nom image ? 
 
-        String URL = "http://localhost:3001/api/rentals" + uploadDir + "/" + fileName;
+        String URL = rootUrl + uploadDir + "/" + fileName;
 
         try (InputStream inputStream = pictureFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileName);
