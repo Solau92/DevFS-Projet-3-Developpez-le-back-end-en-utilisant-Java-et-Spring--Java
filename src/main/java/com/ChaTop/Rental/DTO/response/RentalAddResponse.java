@@ -7,5 +7,13 @@ public class RentalAddResponse {
     public RentalAddResponse() {
         this.message = "Rental created !";
     }
-    
+
+    public String getMessage() {
+        return this.message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 }

@@ -14,31 +14,31 @@ import com.ChaTop.Rental.DTO.UserLoginDTO;
 import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.entity.User;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
-import com.ChaTop.Rental.exception.ErrorSavingUserException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.repository.UsersRepository;
+import com.ChaTop.Rental.service.JWTService;
 import com.ChaTop.Rental.service.UsersService;
-
-import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
     private UsersRepository usersRepository;
 
+    private JWTService jwtService;
+
     private static final Logger log = LoggerFactory.getLogger(UsersServiceImpl.class);
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UsersServiceImpl(UsersRepository usersRepository, BCryptPasswordEncoder bCryptPasswordEncoder /*, ModelMapper modelMapper */) {
+    public UsersServiceImpl(UsersRepository usersRepository, BCryptPasswordEncoder bCryptPasswordEncoder, JWTService jwtService) {
         this.usersRepository = usersRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtService =jwtService;
     }
 
-    // TODO question : Return void ? renvoyer token plutôt 
     @Override
-    public void saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException, ErrorSavingUserException {
+    public String saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException {
         
         log.info("Trying to save user : " + userDTOToSave.toString());
 
@@ -51,47 +51,29 @@ public class UsersServiceImpl implements UsersService {
         
         userDTOToSave.setPassword(this.bCryptPasswordEncoder.encode(userDTOToSave.getPassword()));
 
-        // User userToSave = new User(userDTOToSave.getEmail(), userDTOToSave.getName(), userDTOToSave.getPassword(),LocalDate.now());
-
         // TODO done : Mapper --> créer @Bean 
         ModelMapper mapper = new ModelMapper();
         User userToSave = mapper.map(userDTOToSave, User.class);
         userToSave.setCreated_at(LocalDate.now());
 
-        // log.info("DTO : {}", userDTOToSave);
-        // log.info("User : {}", userToSave);
-
-        // TODO : contrainte validité à voir avant, ici sert à rien d'aller en BDD
-        try {
-            this.usersRepository.save(userToSave);
-        } catch (ConstraintViolationException Exc) {
-            log.error("Constraint violation exception");
-            throw new ErrorSavingUserException("Error saving user");
-        }
+        this.usersRepository.save(userToSave);
         
         log.info("User with email {} successfully saved", userDTOToSave.getEmail());
         
+        return jwtService.generateToken(new UserLoginDTO(userDTOToSave.getEmail(), userDTOToSave.getPassword()));
     }
 
-    // TODO : A la place du void : renvoyer token directement 
     @Override
-    public void validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException {
+    public String validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException {
 
         Optional<User> optionalUser = usersRepository.findByEmail(userLoginDTO.getEmail());
-
-        // TODO : Factoriser les 2 if
  
-        if(!optionalUser.isPresent()) {
-            log.error("Invalid email");
+        if(!optionalUser.isPresent() || !this.bCryptPasswordEncoder.matches(userLoginDTO.getPassword(), optionalUser.get().getPassword())) {
+            log.error("Invalid email or password");
             throw new BadCredentialsCustomException("error");
         }
-        
-        boolean correctPassword = this.bCryptPasswordEncoder.matches(userLoginDTO.getPassword(), optionalUser.get().getPassword());
 
-        if (!correctPassword) {
-            log.error("Invalid password");
-            throw new BadCredentialsCustomException("error");
-        }
+        return jwtService.generateToken(userLoginDTO);
     }
 
     // TODO : Type renvoi : authentication 

@@ -17,12 +17,10 @@ import com.ChaTop.Rental.DTO.UserRegisterDTO;
 import com.ChaTop.Rental.DTO.response.LoginResponse;
 import com.ChaTop.Rental.DTO.response.MeResponse;
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
-import com.ChaTop.Rental.exception.ErrorSavingUserException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.service.JWTService;
 import com.ChaTop.Rental.service.UsersService;
-import com.nimbusds.jose.shaded.gson.Gson;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,38 +34,40 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
 
-    private JWTService jwtService;
     private UsersService usersService;
 
     private static final Logger log = LoggerFactory.getLogger(JWTService.class);
 
-    private Gson gson = new Gson();
-
-    public AuthenticationController(JWTService jwtService, UsersService usersService) {
-        this.jwtService = jwtService;
+    public AuthenticationController(UsersService usersService) {
         this.usersService = usersService;
     }
 
+    /**
+     * 
+     * @param userLoginDto
+     * @return
+     * @throws BadCredentialsCustomException
+     */
     @Operation(summary = "Login", description = "Login process")
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json") }, description = "User successfully loged in"),
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     })
-    @PostMapping(value="/login", produces = "application/json")
-    public ResponseEntity<String> getToken(@RequestBody UserLoginDTO userLoginDto) throws BadCredentialsCustomException {
+    @PostMapping(value="/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody UserLoginDTO userLoginDto) throws BadCredentialsCustomException {
 
-        usersService.validateCredentials(userLoginDto);
-        
-        // TODO : Login response : login / mdp vide + existe pas bdd
-        // final ou directement dans le return 
-        // tester si champs vides 
+        String token = usersService.validateCredentials(userLoginDto);
 
-        final String token = jwtService.generateToken(userLoginDto);
-        final LoginResponse response = new LoginResponse(token);
-        // TODO : gson.toJson pas nécessaire
-        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
+        LoginResponse response = new LoginResponse(token);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * 
+     * @param authentication
+     * @return
+     * @throws UserNotFoundException
+     */
     @Operation(summary = "Getting user information", description = "Getting logged user information")
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = MeResponse.class), mediaType = "application/json") }, description = "Information of user successfully obtained"),
@@ -75,7 +75,7 @@ public class AuthenticationController {
     })
     @SecurityRequirement(name = "Bearer Authentication")
     @GetMapping(value="/me", produces = "application/json")
-    public ResponseEntity<String> me(Authentication authentication) throws UserNotFoundException {
+    public ResponseEntity<MeResponse> me(Authentication authentication) throws UserNotFoundException {
 
         String email = authentication.getName();
 
@@ -85,25 +85,29 @@ public class AuthenticationController {
 
         //TODO : mapping 
         MeResponse response = new MeResponse(user.getId(), user.getName(), user.getEmail(), user.getCreated_at().toString(), user.getUpdated_at() == null ? null : user.getUpdated_at().toString());
-        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * 
+     * @param userRegisterDTO
+     * @return
+     * @throws UserAlreadyExistsException
+     */
     @Operation(summary = "Register", description = "Register process")
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = LoginResponse.class), mediaType = "application/json") }, description = "User successfully registred"),
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     })
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRegisterDTO userRegisterDTO) throws UserAlreadyExistsException, ErrorSavingUserException {
+    public ResponseEntity<LoginResponse> registerUser(@Valid @RequestBody UserRegisterDTO userRegisterDTO) throws UserAlreadyExistsException {
         
         log.info("api/register Create user : {}", userRegisterDTO.toString());
         
-        usersService.saveUser(userRegisterDTO);
-        
-        UserLoginDTO userLoginDTO = new UserLoginDTO(userRegisterDTO.getEmail(), userRegisterDTO.getPassword());
-        String token = jwtService.generateToken(userLoginDTO);
+        String token = usersService.saveUser(userRegisterDTO);
+
         LoginResponse response = new LoginResponse(token);
-        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 }

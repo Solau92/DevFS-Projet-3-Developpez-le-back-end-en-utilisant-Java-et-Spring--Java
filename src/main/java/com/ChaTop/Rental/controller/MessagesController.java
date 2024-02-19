@@ -13,7 +13,6 @@ import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.DTO.response.MessageAddResponse;
 import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.service.MessagesService;
-import com.nimbusds.jose.shaded.gson.Gson;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,8 +31,6 @@ public class MessagesController {
 
     private static final Logger log = LoggerFactory.getLogger(MessagesController.class);
 
-    private Gson gson = new Gson();
-
     public MessagesController(MessagesService messagesService) {
         this.messagesService = messagesService;
     }
@@ -45,14 +42,14 @@ public class MessagesController {
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     })        
     @PostMapping("")
-    public ResponseEntity<String> addMessage(@RequestBody MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
+    public ResponseEntity<MessageAddResponse> addMessage(@Valid @RequestBody MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
 
         log.info("api/messages : Create message : {}", messageRegisterDTO.toString());
         messagesService.saveMessage(messageRegisterDTO);
 
         MessageAddResponse response = new MessageAddResponse();
 
-        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     

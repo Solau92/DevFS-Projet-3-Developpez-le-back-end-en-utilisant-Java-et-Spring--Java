@@ -1,8 +1,13 @@
 package com.ChaTop.Rental.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class UserLoginDTO {
 
+    @NotBlank
     private String email;
+    
+    @NotBlank
     private String password;
 
     public String getEmail() {
