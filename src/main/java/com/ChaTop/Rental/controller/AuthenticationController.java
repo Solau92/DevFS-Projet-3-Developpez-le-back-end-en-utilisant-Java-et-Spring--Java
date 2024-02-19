@@ -57,9 +57,14 @@ public class AuthenticationController {
     public ResponseEntity<String> getToken(@RequestBody UserLoginDTO userLoginDto) throws BadCredentialsCustomException {
 
         usersService.validateCredentials(userLoginDto);
+        
+        // TODO : Login response : login / mdp vide + existe pas bdd
+        // final ou directement dans le return 
+        // tester si champs vides 
 
-        String token = jwtService.generateToken(userLoginDto);
-        LoginResponse response = new LoginResponse(token);
+        final String token = jwtService.generateToken(userLoginDto);
+        final LoginResponse response = new LoginResponse(token);
+        // TODO : gson.toJson pas nécessaire
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 
@@ -76,7 +81,9 @@ public class AuthenticationController {
 
         UserDTO user = usersService.findByEmail(email);
 
-        //TODO : mapping ?
+        // TODO : Renvoyer DTO, pas besoin réponse 
+
+        //TODO : mapping 
         MeResponse response = new MeResponse(user.getId(), user.getName(), user.getEmail(), user.getCreated_at().toString(), user.getUpdated_at() == null ? null : user.getUpdated_at().toString());
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }

@@ -77,6 +77,7 @@ public class RentalsServiceImpl implements RentalsService {
         return rentalDTO;
     }
 
+    // TODO : quand on génère token, on met l'email, mais on peut metttre aussi l'id --> à voir (pour éviter recherche owner id), voir subject
     @Override
     public void saveRental(RentalRegisterDTO rentalDTOToSave) throws UserNotFoundException, IOException {
 

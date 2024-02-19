@@ -36,7 +36,7 @@ public class UsersServiceImpl implements UsersService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    // TODO question : Return void ?
+    // TODO question : Return void ? renvoyer token plutôt 
     @Override
     public void saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException, ErrorSavingUserException {
         
@@ -53,7 +53,7 @@ public class UsersServiceImpl implements UsersService {
 
         // User userToSave = new User(userDTOToSave.getEmail(), userDTOToSave.getName(), userDTOToSave.getPassword(),LocalDate.now());
 
-        // TODO done : Mapper 
+        // TODO done : Mapper --> créer @Bean 
         ModelMapper mapper = new ModelMapper();
         User userToSave = mapper.map(userDTOToSave, User.class);
         userToSave.setCreated_at(LocalDate.now());
@@ -61,6 +61,7 @@ public class UsersServiceImpl implements UsersService {
         // log.info("DTO : {}", userDTOToSave);
         // log.info("User : {}", userToSave);
 
+        // TODO : contrainte validité à voir avant, ici sert à rien d'aller en BDD
         try {
             this.usersRepository.save(userToSave);
         } catch (ConstraintViolationException Exc) {
@@ -72,11 +73,14 @@ public class UsersServiceImpl implements UsersService {
         
     }
 
+    // TODO : A la place du void : renvoyer token directement 
     @Override
     public void validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException {
 
         Optional<User> optionalUser = usersRepository.findByEmail(userLoginDTO.getEmail());
 
+        // TODO : Factoriser les 2 if
+ 
         if(!optionalUser.isPresent()) {
             log.error("Invalid email");
             throw new BadCredentialsCustomException("error");
@@ -90,11 +94,13 @@ public class UsersServiceImpl implements UsersService {
         }
     }
 
+    // TODO : Type renvoi : authentication 
     @Override
     public UserDTO findByEmail(String email) throws UserNotFoundException {
         
         Optional<User> optionalUser = usersRepository.findByEmail(email);
             
+        // TODO : pas besoin, si email c'est que l'utilisateur est trouvé
         if(!optionalUser.isPresent()) {
             log.error("User not found");
             // TODO question : Quoi faire ?

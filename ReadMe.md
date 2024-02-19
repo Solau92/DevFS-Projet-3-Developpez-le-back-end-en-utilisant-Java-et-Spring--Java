@@ -6,18 +6,18 @@
 The back-end part of an app to connect owners and tenants. </br>
 This app uses Java to run.
 
-### - **Getting Started**
+### **Getting Started**
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-### - **Prerequisites**
+### **Prerequisites**
 
 You need to install : 
 * Java 17
 * Maven 4.0.0
 * MySQL 8.0.31
 
-### - **Installing** 
+### **Installing** 
 
 * [Install Java](https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html)
 * [Install Maven](https://maven.apache.org/install.html)

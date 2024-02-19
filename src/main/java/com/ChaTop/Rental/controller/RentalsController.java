@@ -86,6 +86,8 @@ public class RentalsController {
         return ResponseEntity.status(HttpStatus.OK).body(rentalsService.findById(id));
     }
 
+    // TODO : @ModelAttribute --> créer Objet plutôt que d'avoir trop de paramètres 
+    // TODO : gérer champs vides 
     @Operation(summary = "Saving a new rental", description = "Saving the given new rental")
     @ApiResponses({
         @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = RentalAddResponse.class), mediaType = "application/json") }, description = "Rental successfully saved"),
@@ -103,9 +105,11 @@ public class RentalsController {
         rentalsService.saveRental(rentalRegisterDTO);
 
         RentalAddResponse response = new RentalAddResponse();
+        // TODO : enlever Json
         return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
     }
 
+        // TODO : faire objet + ... (cf ci-dessus)
        @Operation(summary = "Updating a rental", description = "Updating a rental")
        @ApiResponses({
            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = RentalUpdateResponse.class), mediaType = "application/json") }, description = "Rental successfully updated"),
