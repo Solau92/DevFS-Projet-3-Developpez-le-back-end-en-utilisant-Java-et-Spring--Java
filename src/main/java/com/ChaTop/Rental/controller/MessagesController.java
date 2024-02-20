@@ -15,7 +15,6 @@ import com.ChaTop.Rental.service.MessagesService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -35,21 +34,20 @@ public class MessagesController {
     }
 
     @Operation(summary = "Saving a message", description = "Saves the given message, and return a success message")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = MessageAddResponse.class), mediaType = "application/json") }, description = "Message successfully saved"),
-        @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())}, description = "Error when saving message"),
-        @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
-    })        
+    @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = MessageAddResponse.class), mediaType = "application/json") }, description = "Message successfully saved")
+    @ApiResponse(responseCode = "400", content = {
+            @Content(schema = @Schema()) }, description = "Error when saving message")
+    @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema()) }, description = "Unauthorize user")
+
     @PostMapping("")
     public ResponseEntity<MessageAddResponse> addMessage(@Valid @RequestBody MessageRegisterDTO messageRegisterDTO) {
 
-        log.info("api/messages : Create message : {}", messageRegisterDTO.toString());
+        log.info("api/messages : trying to create message : {}", messageRegisterDTO);
+        
         messagesService.saveMessage(messageRegisterDTO);
 
-        MessageAddResponse response = new MessageAddResponse();
-
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageAddResponse());
     }
 
-    
 }

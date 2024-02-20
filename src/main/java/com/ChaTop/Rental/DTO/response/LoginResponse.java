@@ -2,7 +2,7 @@ package com.ChaTop.Rental.DTO.response;
 
 public class LoginResponse {
 
-    String token;
+    private String token;
 
     public LoginResponse(String token) {
         this.token = token;

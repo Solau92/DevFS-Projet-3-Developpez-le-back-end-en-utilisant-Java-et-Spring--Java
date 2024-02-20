@@ -11,10 +11,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.util.StringUtils;
-import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.ChaTop.Rental.DTO.RentalDTOPicture;
 import com.ChaTop.Rental.DTO.RentalDTOTabPicture;
@@ -26,6 +22,11 @@ import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.repository.RentalsRepository;
 import com.ChaTop.Rental.service.RentalsService;
 import com.ChaTop.Rental.service.UsersService;
+
+import org.springframework.util.StringUtils;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class RentalsServiceImpl implements RentalsService {
@@ -50,8 +51,14 @@ public class RentalsServiceImpl implements RentalsService {
         this.usersService = usersService;
     }
 
+    /**
+     * Returns a list of all rentals from database.
+     * 
+     * @return List<RentalDTOPicture>
+     */
     @Override
     public List<RentalDTOPicture> getAllRentals() {
+
         log.info("Find all rentals");
 
         List<Rental> rentals = rentalsRepository.findAll();
@@ -66,16 +73,29 @@ public class RentalsServiceImpl implements RentalsService {
         return rentalsDTO;
     }
 
+    /**
+     * Return a rental from database, given its id.
+     * 
+     * @param id
+     * @return RentalDTO
+     * @throws RentalNotFoundException if the rental was not found in database
+     */
     @Override
     public RentalDTOTabPicture findById(int id) throws RentalNotFoundException {
 
+        log.info("Searching rental with id {}", id);
+
         Optional<Rental> optionalRental = rentalsRepository.findById(id);
-        
-        if(!optionalRental.isPresent()) {
+
+        if (!optionalRental.isPresent()) {
+            log.error("Rental with id {} not found", id);
             throw new RentalNotFoundException("Rental with id " + id + "not found");
         }
+
         Rental rental = optionalRental.get();
         String[] picture = { rental.getPicture() };
+
+        log.info("Rental with id {} found", id);
 
         ModelMapper mapper = new ModelMapper();
         RentalDTOTabPicture rentalDTO = mapper.map(rental, RentalDTOTabPicture.class);
@@ -84,10 +104,18 @@ public class RentalsServiceImpl implements RentalsService {
         return rentalDTO;
     }
 
-    // TODO : quand on génère token, on met l'email, mais on peut metttre aussi l'id
-    // --> à voir (pour éviter recherche owner id), voir subject
+    /**
+     * Saves in database the given rental.
+     * 
+     * @param rentalRegisterDTO
+     * @throws RentalNotFoundException
+     * @throws UserNotFoundException
+     * @throws IOException
+     */
     @Override
     public void saveRental(RentalRegisterDTO rentalDTOToSave) throws UserNotFoundException, IOException {
+
+        log.info("Trying to save rental : {}", rentalDTOToSave);
 
         Rental rentalToSave = new Rental();
 
@@ -109,8 +137,16 @@ public class RentalsServiceImpl implements RentalsService {
         rentalsRepository.save(rentalToSave);
     }
 
+    /**
+     * Updates the given rental.
+     * 
+     * @param rentalUpdateDTO
+     * @throws RentalNotFoundException if the rental was not found in database
+     */
     @Override
     public void updateRental(RentalUpdateDTO rentalUpdateDTO) throws RentalNotFoundException {
+
+        log.info("Trying to update rental : {}", rentalUpdateDTO);
 
         RentalDTOTabPicture rentalDTO = this.findById(rentalUpdateDTO.getId());
 
@@ -128,17 +164,28 @@ public class RentalsServiceImpl implements RentalsService {
         rentalToUpdate.setPicture(rentalDTO.getPicture()[0]);
         rentalToUpdate.setDescription(rentalUpdateDTO.getDescription());
         rentalToUpdate.setOwner_id(rentalDTO.getOwner_id());
-        
+
         rentalsRepository.save(rentalToUpdate);
     }
 
+    /**
+     * Updload picture file in a directory set in applications.properties file, and
+     * returns the URL of the image that will be set in database
+     * 
+     * @param pictureFile
+     * @param ownerId
+     * @return String the URL of the image that will be set in database
+     * @throws IOException
+     */
     private String uploadFileAndReturnURL(MultipartFile pictureFile, int ownerId) throws IOException {
 
+        log.info("Trying to updload image named {} (user id {})", pictureFile.getOriginalFilename(), ownerId);
         String fileName = StringUtils.cleanPath(pictureFile.getOriginalFilename());
 
         Path uploadPath = Paths.get(uploadDirPath + uploadDir);
 
         if (!Files.exists(uploadPath)) {
+            log.info("Image directory created");
             Files.createDirectories(uploadPath);
         }
 
@@ -150,8 +197,11 @@ public class RentalsServiceImpl implements RentalsService {
             Path filePath = uploadPath.resolve(fileName);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {
+            log.error("Error saving image file : {}", fileName);
             throw new IOException("Could not save image file: " + fileName, ioe);
         }
+
+        log.info("Image correctly uploaded");
 
         return URL;
 

@@ -4,6 +4,11 @@ import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 
 public interface MessagesService {
 
-    public void saveMessage(MessageRegisterDTO messageRegisterDTO);
-    
+    /**
+     * Saves the message.
+     * 
+     * @param messageRegisterDTO
+     */
+    void saveMessage(MessageRegisterDTO messageRegisterDTO);
+
 }

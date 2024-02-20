@@ -2,11 +2,11 @@ package com.ChaTop.Rental.DTO.response;
 
 public class MeResponse {
 
-    int id;
-    String name;
-    String email;
-    String created_at;
-    String updated_at;
+    private int id;
+    private String name;
+    private String email;
+    private String created_at;
+    private String updated_at;
 
     public MeResponse() {
     }

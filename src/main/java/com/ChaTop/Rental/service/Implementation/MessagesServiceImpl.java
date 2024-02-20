@@ -23,6 +23,11 @@ public class MessagesServiceImpl implements MessagesService {
         this.messagesRepository = messagesRepository;
     }
 
+    /**
+     * Saves the message in database.
+     * 
+     * @param messageRegisterDTO
+     */
     @Override
     public void saveMessage(MessageRegisterDTO messageRegisterDTO) {
 

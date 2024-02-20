@@ -24,7 +24,8 @@ public class RentalRegisterDTO {
 
     private String ownerEmail;
 
-    public RentalRegisterDTO(String name, String surface, String price, MultipartFile picture, String description, String ownerEmail) {
+    public RentalRegisterDTO(String name, String surface, String price, MultipartFile picture, String description,
+            String ownerEmail) {
         this.name = name;
         this.surface = surface;
         this.price = price;
@@ -80,5 +81,17 @@ public class RentalRegisterDTO {
     public void setOwner_Email(String ownerEmail) {
         this.ownerEmail = ownerEmail;
     }
-    
+
+    @Override
+    public String toString() {
+        return "{" +
+                " name='" + getName() + "'" +
+                ", surface='" + getSurface() + "'" +
+                ", price='" + getPrice() + "'" +
+                ", picture='" + getPicture() + "'" +
+                ", description='" + getDescription() + "'" +
+                ", ownerEmail='" + getOwnerEmail() + "'" +
+                "}";
+    }
+
 }

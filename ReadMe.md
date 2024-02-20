@@ -69,6 +69,7 @@ For this, please run the sql commands present in the *script.sql* and *data.sql*
 Import the code on your computer.
 
 In the application.properties file you must complete the following fields : 
+- security.my-jwtKey : the length of this secret key must be at least 256 bits
 - picture-upload-directory : name of the directory that will be created to save pictures
 - picture-upload-directory-path : path of the directory in which the previous folder will be created.
 
