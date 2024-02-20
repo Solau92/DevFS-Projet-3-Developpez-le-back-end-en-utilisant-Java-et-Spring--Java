@@ -9,14 +9,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -32,6 +30,7 @@ import com.ChaTop.Rental.DTO.RentalUpdateDTO;
 import com.ChaTop.Rental.DTO.response.RentalAddResponse;
 import com.ChaTop.Rental.DTO.response.RentalUpdateResponse;
 import com.ChaTop.Rental.DTO.response.RentalsResponse;
+import com.ChaTop.Rental.exception.RentalNotFoundException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 import com.ChaTop.Rental.service.RentalsService;
 
@@ -41,6 +40,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/rentals")
@@ -82,6 +82,7 @@ public class RentalsController {
      * 
      * @param id
      * @return
+ * @throws RentalNotFoundException 
      */
     @Operation(summary = "Getting a rental", description = "Getting a rental, given its id")
     @ApiResponses({
@@ -91,14 +92,20 @@ public class RentalsController {
                     @Content(schema = @Schema()) }, description = "Unauthorize user")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<RentalDTO> getRental(@PathVariable int id) {
+    public ResponseEntity<RentalDTO> getRental(@PathVariable int id) throws RentalNotFoundException {
         log.info("/rentals/{} : Searching rental with id {}", id);
         return ResponseEntity.status(HttpStatus.OK).body(rentalsService.findById(id));
     }
 
-
-    // TODO : @ModelAttribute --> créer Objet plutôt que d'avoir trop de paramètres
-    // TODO : gérer champs vides
+    /**
+     * 
+     * @param authentication
+     * @param rentalRegisterDTO
+     * @return
+     * @throws UserNotFoundException
+     * @throws IOException
+ * @throws RentalNotFoundException 
+     */
     @Operation(summary = "Saving a new rental", description = "Saving the given new rental")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -107,24 +114,27 @@ public class RentalsController {
                     @Content(schema = @Schema()) }, description = "Unauthorize user")
     })
     @PostMapping("")
-    public ResponseEntity<RentalAddResponse> addRental(Authentication authentication, @RequestParam("name") String name,
-            @RequestParam("surface") String surface, @RequestParam("price") String price,
-            @RequestParam("description") String description, @RequestParam("picture") MultipartFile pictureFile)
-            throws UserNotFoundException, IOException {
+    public ResponseEntity<RentalAddResponse> addRental(Authentication authentication,
+            @Valid @ModelAttribute("rentalDTO") RentalRegisterDTO rentalRegisterDTO)
+            throws UserNotFoundException, IOException, RentalNotFoundException {
 
         // Pour récup (in fine) le owner_id
         String ownerEmail = authentication.getName();
+        rentalRegisterDTO.setOwner_Email(ownerEmail);
 
-        RentalRegisterDTO rentalRegisterDTO = new RentalRegisterDTO(name, surface, price, pictureFile, description,
-                ownerEmail);
         rentalsService.saveRental(rentalRegisterDTO);
 
         RentalAddResponse response = new RentalAddResponse();
-        // TODO : enlever Json
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    // TODO : faire objet + ... (cf ci-dessus)
+    /**
+     * 
+     * @param id
+     * @param rentalUpdateDTO
+     * @return
+ * @throws RentalNotFoundException 
+     */
     @Operation(summary = "Updating a rental", description = "Updating a rental")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {
@@ -133,11 +143,9 @@ public class RentalsController {
                     @Content(schema = @Schema()) }, description = "Unauthorize user")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<RentalUpdateResponse> updateRental(@PathVariable int id, @RequestParam("name") String name,
-            @RequestParam("surface") String surface, @RequestParam("price") String price,
-            @RequestParam("description") String description) {
+    public ResponseEntity<RentalUpdateResponse> updateRental(@PathVariable int id, @Valid @ModelAttribute("rentalDTO") RentalUpdateDTO rentalUpdateDTO) throws RentalNotFoundException {
 
-        RentalUpdateDTO rentalUpdateDTO = new RentalUpdateDTO(id, name, surface, price, description);
+        rentalUpdateDTO.setId(id);
         rentalsService.updateRental(rentalUpdateDTO);
 
         RentalUpdateResponse response = new RentalUpdateResponse();
@@ -145,6 +153,12 @@ public class RentalsController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    /**
+     * 
+     * @param fileName
+     * @return
+     * @throws FileNotFoundException
+     */
     @Operation(description = "Method used to display pictures", hidden = true)
     @GetMapping("/rental-pictures/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) throws FileNotFoundException {
@@ -153,9 +167,8 @@ public class RentalsController {
         Resource resource = null;
         try {
             resource = new UrlResource(uploadPath.toUri());
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+        } catch (MalformedURLException ex) {
+            log.error("Error --------");
         }
 
         return ResponseEntity.ok()

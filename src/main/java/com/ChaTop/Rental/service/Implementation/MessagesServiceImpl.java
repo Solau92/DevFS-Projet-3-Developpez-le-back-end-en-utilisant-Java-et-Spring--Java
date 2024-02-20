@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.entity.Message;
-import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.repository.MessagesRepository;
 import com.ChaTop.Rental.service.MessagesService;
 
@@ -24,26 +23,15 @@ public class MessagesServiceImpl implements MessagesService {
         this.messagesRepository = messagesRepository;
     }
 
-    // TODO question : Return void ?
     @Override
-    public void saveMessage(MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
+    public void saveMessage(MessageRegisterDTO messageRegisterDTO) {
 
         log.info("Trying to save message : {}", messageRegisterDTO);
 
-        // TODO question : gérer erreurs, mais quand renvoyer erreur 400 ? 
-        boolean error = false;
-
-        if(error) {
-            log.info("Error saving message");
-            throw new ErrorSavingMessageException("Error when saving message");
-        }
-
-        // TODO done : Mapper 
         ModelMapper mapper = new ModelMapper();
         Message messageToSave = mapper.map(messageRegisterDTO, Message.class);
         messageToSave.setCreated_at(LocalDate.now());
-
-        // Message messageToSave = new Message(messageRegisterDTO.getRental_id(), messageRegisterDTO.getUser_id(), messageRegisterDTO.getMessage(), LocalDate.now());
+        messageToSave.setUpdated_at(LocalDate.now());
 
         messagesRepository.save(messageToSave);
 

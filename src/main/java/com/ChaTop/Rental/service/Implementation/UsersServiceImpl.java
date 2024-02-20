@@ -51,10 +51,10 @@ public class UsersServiceImpl implements UsersService {
         
         userDTOToSave.setPassword(this.bCryptPasswordEncoder.encode(userDTOToSave.getPassword()));
 
-        // TODO done : Mapper --> créer @Bean 
         ModelMapper mapper = new ModelMapper();
         User userToSave = mapper.map(userDTOToSave, User.class);
         userToSave.setCreated_at(LocalDate.now());
+        userToSave.setUpdated_at(LocalDate.now());
 
         this.usersRepository.save(userToSave);
         
@@ -82,17 +82,15 @@ public class UsersServiceImpl implements UsersService {
         
         Optional<User> optionalUser = usersRepository.findByEmail(email);
             
-        // TODO : pas besoin, si email c'est que l'utilisateur est trouvé
         if(!optionalUser.isPresent()) {
             log.error("User not found");
-            // TODO question : Quoi faire ?
             throw new UserNotFoundException("User not found");
         }
 
         User user = optionalUser.get();
 
-        // TODO : mapping 
-        UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getCreated_at(), user.getUpdated_at() == null ? null : user.getUpdated_at());
+        ModelMapper mapper = new ModelMapper();
+        UserDTO userDTO = mapper.map(user, UserDTO.class);
 
         return userDTO;
     }
@@ -104,14 +102,13 @@ public class UsersServiceImpl implements UsersService {
 
         if(!optionalUser.isPresent()) {
             log.error("User not found");
-            // TODO question : Quoi faire ?
             throw new UserNotFoundException("User not found");
         }
 
         User user = optionalUser.get();
 
-        // TODO : mapping 
-        UserDTO userDTO = new UserDTO(user.getId(), user.getEmail(), user.getName(), user.getCreated_at(), user.getUpdated_at() == null ? null : user.getUpdated_at());
+        ModelMapper mapper = new ModelMapper();
+        UserDTO userDTO = mapper.map(user, UserDTO.class);
 
         return userDTO;   
     }

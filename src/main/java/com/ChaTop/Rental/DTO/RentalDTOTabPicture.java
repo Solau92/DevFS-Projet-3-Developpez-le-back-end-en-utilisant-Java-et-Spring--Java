@@ -21,5 +21,9 @@ public class RentalDTOTabPicture extends RentalDTO {
     public void setPicture(String[] picture) {
         this.picture = picture;
     }
+
+    public void setPictureFromPicture(String pictureFile) {
+        this.picture = null;
+    }
     
 }

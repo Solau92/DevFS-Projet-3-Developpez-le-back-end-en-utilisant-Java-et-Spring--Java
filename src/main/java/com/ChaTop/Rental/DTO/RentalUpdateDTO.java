@@ -1,11 +1,21 @@
 package com.ChaTop.Rental.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class RentalUpdateDTO {
 
     private int id;
+
+    @NotBlank
     private String name;
+    
+    @NotBlank
     private String surface;
+
+    @NotBlank
     private String price;
+
+    @NotBlank
     private String description;
 
     public RentalUpdateDTO(int id, String name, String surface, String price, String description) {

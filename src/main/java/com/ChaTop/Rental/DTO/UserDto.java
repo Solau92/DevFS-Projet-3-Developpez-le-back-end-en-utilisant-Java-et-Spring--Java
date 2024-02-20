@@ -10,6 +10,8 @@ public class UserDTO {
     private LocalDate created_at;
     private LocalDate updated_at;
 
+    public UserDTO() {
+    }
 
     public UserDTO(int id, String email, String name, LocalDate created_at, LocalDate updated_at) {
         this.id = id;

@@ -1,5 +1,6 @@
 package com.ChaTop.Rental.controller;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -81,10 +82,9 @@ public class AuthenticationController {
 
         UserDTO user = usersService.findByEmail(email);
 
-        // TODO : Renvoyer DTO, pas besoin réponse 
+        ModelMapper mapper = new ModelMapper();
+        MeResponse response = mapper.map(user, MeResponse.class);
 
-        //TODO : mapping 
-        MeResponse response = new MeResponse(user.getId(), user.getName(), user.getEmail(), user.getCreated_at().toString(), user.getUpdated_at() == null ? null : user.getUpdated_at().toString());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

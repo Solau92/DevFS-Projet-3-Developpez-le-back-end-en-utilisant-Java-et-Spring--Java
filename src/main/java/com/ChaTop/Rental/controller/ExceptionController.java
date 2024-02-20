@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import com.ChaTop.Rental.exception.BadCredentialsCustomException;
-import com.ChaTop.Rental.exception.ErrorSavingMessageException;
+import com.ChaTop.Rental.exception.RentalNotFoundException;
 import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 
@@ -42,9 +42,9 @@ public class ExceptionController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ErrorSavingMessageException.class) 
-    public ResponseEntity<Object> exceptionHandler(ErrorSavingMessageException ex, WebRequest request){
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(RentalNotFoundException.class) 
+    public ResponseEntity<Object> exceptionHandler(RentalNotFoundException ex, WebRequest request){
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
     
 }

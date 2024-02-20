@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.DTO.response.MessageAddResponse;
-import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.service.MessagesService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +41,7 @@ public class MessagesController {
         @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
     })        
     @PostMapping("")
-    public ResponseEntity<MessageAddResponse> addMessage(@Valid @RequestBody MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
+    public ResponseEntity<MessageAddResponse> addMessage(@Valid @RequestBody MessageRegisterDTO messageRegisterDTO) {
 
         log.info("api/messages : Create message : {}", messageRegisterDTO.toString());
         messagesService.saveMessage(messageRegisterDTO);

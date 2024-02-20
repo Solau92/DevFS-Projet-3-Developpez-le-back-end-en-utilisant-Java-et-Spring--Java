@@ -2,13 +2,26 @@ package com.ChaTop.Rental.DTO;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class RentalRegisterDTO {
 
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String surface;
+
+    @NotBlank
     private String price;
+
+    @NotNull
     private MultipartFile picture;
+
+    @NotBlank
     private String description;
+
     private String ownerEmail;
 
     public RentalRegisterDTO(String name, String surface, String price, MultipartFile picture, String description, String ownerEmail) {
@@ -64,7 +77,7 @@ public class RentalRegisterDTO {
         return this.ownerEmail;
     }
 
-    public void setOwner_id(String ownerEmail) {
+    public void setOwner_Email(String ownerEmail) {
         this.ownerEmail = ownerEmail;
     }
     
