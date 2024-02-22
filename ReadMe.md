@@ -64,7 +64,9 @@ Run the `ng serve` command.
 ## - **Running back-end App** 
 
 Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the database. </br>
-For this, please run the sql commands present in the *script.sql* and *data.sql* files under the *resources/sql* folder in the code base.
+For this, please run the sql commands present in the *script.sql* file under the *resources/sql* folder in the code base.
+
+For demonstration purpose, you can insert data in database while running the *data.sql* file.
 
 Import the code on your computer.
 
@@ -79,9 +81,10 @@ To run the app, go to the folder that contains the pom.xml file and execute the 
 Navigate to http://localhost:4200 to access the whole app.
 
 NB : 
+- if you have run the *data.sql* file, you can use theses credentials : 
+   . user : user1@gmail.com
+   . password : password 
 - the passwords of all users in database are "password"
-- if you want to test the app, you can use theses credentials : 
----------------------------------
 
 
 ## Version

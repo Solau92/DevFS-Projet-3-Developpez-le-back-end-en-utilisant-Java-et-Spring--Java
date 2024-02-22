@@ -6,12 +6,12 @@ VALUES
 ('user3@gmail.com', 'User3', '$2a$10$6F5mDGekNDJ2dnGJ8.7KvOB4NoOmW4WGHKjle.23V96D4C6QE9sKu', '2024-02-20', '2024-02-20')
 ;
 
-INSERT INTO RENTALS (name, surface, price, description, owner_id, created_at, updated_at) 
+INSERT INTO RENTALS (name, surface, price, picture, description, owner_id, created_at, updated_at) 
 VALUES 
-('Rental 1', 50, 800, 'awesome apartment', 1, '2024-02-01', '2024-02-02'),
-('Rental 2', 100, 2600, 'awesome house', 1, '2024-02-05', '2024-02-07'),
-('Rental 3', 20, 550, 'awesome studio', 2, '2024-02-08', '2024-02-11'),
-('Rental 4', 30, 750, 'awesome two room flat', 3, '2024-02-15', '2024-02-20')
+('Rental 1', 50, 800, 'https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg','awesome apartment', 1, '2024-02-01', '2024-02-02'),
+('Rental 2', 100, 2600, 'https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg','awesome house', 1, '2024-02-05', '2024-02-07'),
+('Rental 3', 20, 550, 'https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg', 'awesome studio', 2, '2024-02-08', '2024-02-11'),
+('Rental 4', 30, 750, 'https://blog.technavio.org/wp-content/uploads/2018/12/Online-House-Rental-Sites.jpg','awesome two room flat', 3, '2024-02-15', '2024-02-20')
 ;
 
 INSERT INTO MESSAGES (rental_id, user_id, message, created_at, updated_at) 
