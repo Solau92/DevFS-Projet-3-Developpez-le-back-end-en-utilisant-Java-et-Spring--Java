@@ -2,13 +2,13 @@ package com.ChaTop.Rental.service.Implementation;
 
 import java.time.LocalDate;
 
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.entity.Message;
-import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.repository.MessagesRepository;
 import com.ChaTop.Rental.service.MessagesService;
 
@@ -23,21 +23,20 @@ public class MessagesServiceImpl implements MessagesService {
         this.messagesRepository = messagesRepository;
     }
 
-    // TODO question : Return void ?
+    /**
+     * Saves the message in database.
+     * 
+     * @param messageRegisterDTO
+     */
     @Override
-    public void saveMessage(MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
+    public void saveMessage(MessageRegisterDTO messageRegisterDTO) {
 
         log.info("Trying to save message : {}", messageRegisterDTO);
 
-        // TODO question : gérer erreurs, mais quand renvoyer erreur 400 ? 
-        boolean error = false;
-
-        if(error) {
-            log.info("Error saving message");
-            throw new ErrorSavingMessageException("Error when saving message");
-        }
-
-        Message messageToSave = new Message(messageRegisterDTO.getRental_id(), messageRegisterDTO.getUser_id(), messageRegisterDTO.getMessage(), LocalDate.now());
+        ModelMapper mapper = new ModelMapper();
+        Message messageToSave = mapper.map(messageRegisterDTO, Message.class);
+        messageToSave.setCreated_at(LocalDate.now());
+        messageToSave.setUpdated_at(LocalDate.now());
 
         messagesRepository.save(messageToSave);
 

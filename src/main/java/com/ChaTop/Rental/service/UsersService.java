@@ -8,12 +8,41 @@ import com.ChaTop.Rental.exception.UserAlreadyExistsException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 
 public interface UsersService {
-    
-    public void saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException;
 
-    public void validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException;
+    /**
+     * Saves user.
+     * 
+     * @param userDTOToSave
+     * @return String containing the token if the user was correctly saved
+     * @throws UserAlreadyExistsException if there is already a user with the same
+     *                                    email adress
+     */
+    String saveUser(UserRegisterDTO userDTOToSave) throws UserAlreadyExistsException;
 
-    public UserDTO findByEmail(String email) throws UserNotFoundException ;
+    /**
+     * Checks if the credentials are corrects.
+     * 
+     * @param userLoginDTO
+     * @return String containing the token if the credentials are correct
+     * @throws BadCredentialsCustomException if the credentials are not correct
+     */
+    String validateCredentials(UserLoginDTO userLoginDTO) throws BadCredentialsCustomException;
 
-    public UserDTO findById(int id) throws UserNotFoundException ;
+    /**
+     * Returns the corresponding user, given his email.
+     * 
+     * @param email
+     * @return UserDTO
+     * @throws UserNotFoundException if the user was not found
+     */
+    UserDTO findByEmail(String email) throws UserNotFoundException;
+
+    /**
+     * Returns the corresponding user, given his id.
+     * 
+     * @param id
+     * @return UserDTO
+     * @throws UserNotFoundException if the user was not found
+     */
+    UserDTO findById(int id) throws UserNotFoundException;
 }

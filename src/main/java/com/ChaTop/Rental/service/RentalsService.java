@@ -7,15 +7,43 @@ import com.ChaTop.Rental.DTO.RentalDTO;
 import com.ChaTop.Rental.DTO.RentalDTOPicture;
 import com.ChaTop.Rental.DTO.RentalRegisterDTO;
 import com.ChaTop.Rental.DTO.RentalUpdateDTO;
+import com.ChaTop.Rental.exception.RentalNotFoundException;
 import com.ChaTop.Rental.exception.UserNotFoundException;
 
 public interface RentalsService {
 
-    public List<RentalDTOPicture> getAllRentals();
+    /**
+     * Returns a list of all rentals.
+     * 
+     * @return List<RentalDTOPicture>
+     */
+    List<RentalDTOPicture> getAllRentals();
 
-    public RentalDTO findById(int id);
+    /**
+     * Return a rental, given its id.
+     * 
+     * @param id
+     * @return RentalDTO
+     * @throws RentalNotFoundException if the rental was not found
+     */
+    RentalDTO findById(int id) throws RentalNotFoundException;
 
-    public void saveRental(RentalRegisterDTO rentalRegisterDTO) throws UserNotFoundException, IOException;
+    /**
+     * Saves the given rental.
+     * 
+     * @param rentalRegisterDTO
+     * @throws RentalNotFoundException
+     * @throws UserNotFoundException
+     * @throws IOException
+     */
+    void saveRental(RentalRegisterDTO rentalRegisterDTO)
+            throws RentalNotFoundException, UserNotFoundException, IOException;
 
-    public void updateRental(RentalUpdateDTO rentalUpdateDTO);
+    /**
+     * Updates the given rental.
+     * 
+     * @param rentalUpdateDTO
+     * @throws RentalNotFoundException if the rental was not found
+     */
+    void updateRental(RentalUpdateDTO rentalUpdateDTO) throws RentalNotFoundException;
 }

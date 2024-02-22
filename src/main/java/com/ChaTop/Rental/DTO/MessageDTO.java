@@ -2,11 +2,6 @@ package com.ChaTop.Rental.DTO;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 public class MessageDTO {
 
     private int id;

@@ -1,8 +1,12 @@
 package com.ChaTop.Rental.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class MessageRegisterDTO {
 
+    @NotBlank
     private String message;
+    
     private int user_id;
     private int rental_id;
 

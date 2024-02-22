@@ -11,14 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ChaTop.Rental.DTO.MessageRegisterDTO;
 import com.ChaTop.Rental.DTO.response.MessageAddResponse;
-import com.ChaTop.Rental.exception.ErrorSavingMessageException;
 import com.ChaTop.Rental.service.MessagesService;
-import com.nimbusds.jose.shaded.gson.Gson;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -31,28 +29,25 @@ public class MessagesController {
 
     private static final Logger log = LoggerFactory.getLogger(MessagesController.class);
 
-    private Gson gson = new Gson();
-
     public MessagesController(MessagesService messagesService) {
         this.messagesService = messagesService;
     }
 
     @Operation(summary = "Saving a message", description = "Saves the given message, and return a success message")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = MessageAddResponse.class), mediaType = "application/json") }, description = "Message successfully saved"),
-        @ApiResponse(responseCode = "400", content = {@Content(schema = @Schema())}, description = "Error when saving message"),
-        @ApiResponse(responseCode = "401", content = {@Content(schema = @Schema())}, description = "Unauthorize user")
-    })        
-    @PostMapping("")
-    public ResponseEntity<String> addMessage(@RequestBody MessageRegisterDTO messageRegisterDTO) throws ErrorSavingMessageException {
+    @ApiResponse(responseCode = "200", content = {
+            @Content(schema = @Schema(implementation = MessageAddResponse.class), mediaType = "application/json") }, description = "Message successfully saved")
+    @ApiResponse(responseCode = "400", content = {
+            @Content(schema = @Schema()) }, description = "Error when saving message")
+    @ApiResponse(responseCode = "401", content = { @Content(schema = @Schema()) }, description = "Unauthorize user")
 
-        log.info("api/messages : Create message : {}", messageRegisterDTO.toString());
+    @PostMapping("")
+    public ResponseEntity<MessageAddResponse> addMessage(@Valid @RequestBody MessageRegisterDTO messageRegisterDTO) {
+
+        log.info("api/messages : trying to create message : {}", messageRegisterDTO);
+        
         messagesService.saveMessage(messageRegisterDTO);
 
-        MessageAddResponse response = new MessageAddResponse();
-
-        return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(response));
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageAddResponse());
     }
 
-    
 }

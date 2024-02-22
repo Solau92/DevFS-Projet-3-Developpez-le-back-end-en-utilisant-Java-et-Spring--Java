@@ -1,3 +1,6 @@
+CREATE DATABASE rental; 
+USE rental;
+
 CREATE TABLE `USERS` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `email` varchar(255),

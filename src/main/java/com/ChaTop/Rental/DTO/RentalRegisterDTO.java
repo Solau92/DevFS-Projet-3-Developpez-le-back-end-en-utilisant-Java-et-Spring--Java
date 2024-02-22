@@ -1,21 +1,31 @@
 package com.ChaTop.Rental.DTO;
 
-import java.time.LocalDate;
-
 import org.springframework.web.multipart.MultipartFile;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class RentalRegisterDTO {
 
+    @NotBlank
     private String name;
-    private String surface;
-    private String price;
-    private MultipartFile picture;
-    private String description;
-    private String ownerEmail;
-    // private LocalDate created_at;
-    // private LocalDate updated_at;
 
-    public RentalRegisterDTO(String name, String surface, String price, MultipartFile picture, String description, String ownerEmail) {
+    @NotBlank
+    private String surface;
+
+    @NotBlank
+    private String price;
+
+    @NotNull
+    private MultipartFile picture;
+
+    @NotBlank
+    private String description;
+
+    private String ownerEmail;
+
+    public RentalRegisterDTO(String name, String surface, String price, MultipartFile picture, String description,
+            String ownerEmail) {
         this.name = name;
         this.surface = surface;
         this.price = price;
@@ -23,7 +33,6 @@ public class RentalRegisterDTO {
         this.description = description;
         this.ownerEmail = ownerEmail;
     }
-
 
     public String getName() {
         return this.name;
@@ -69,32 +78,20 @@ public class RentalRegisterDTO {
         return this.ownerEmail;
     }
 
-    public void setOwner_id(String ownerEmail) {
+    public void setOwner_Email(String ownerEmail) {
         this.ownerEmail = ownerEmail;
     }
 
-    // public int getOwner_id() {
-    //     return this.owner_id;
-    // }
+    @Override
+    public String toString() {
+        return "{" +
+                " name='" + getName() + "'" +
+                ", surface='" + getSurface() + "'" +
+                ", price='" + getPrice() + "'" +
+                ", picture='" + getPicture() + "'" +
+                ", description='" + getDescription() + "'" +
+                ", ownerEmail='" + getOwnerEmail() + "'" +
+                "}";
+    }
 
-    // public void setOwner_id(int owner_id) {
-    //     this.owner_id = owner_id;
-    // }
-
-    // public LocalDate getCreated_at() {
-    //     return this.created_at;
-    // }
-
-    // public void setCreated_at(LocalDate created_at) {
-    //     this.created_at = created_at;
-    // }
-
-    // public LocalDate getUpdated_at() {
-    //     return this.updated_at;
-    // }
-
-    // public void setUpdated_at(LocalDate updated_at) {
-    //     this.updated_at = updated_at;
-    // }
-    
 }

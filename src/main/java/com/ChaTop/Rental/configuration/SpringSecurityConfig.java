@@ -2,6 +2,7 @@ package com.ChaTop.Rental.configuration;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -17,11 +18,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
+/**
+ * Spring security configuration
+ */
 @Configuration
 public class SpringSecurityConfig {
 
-    private String jwtKey = "A7YkSMCsYI0mZQXAtJGYvO6L+obI4+hvpJG2QWaTkfiK6XKlb0RY29fS2AZcTE0ZGRiOdsYDTG7y478uiWueSg=="; // =
-                                                                                                                        // password
+    @Value("${security.my-jwtKey}")
+    private String jwtKey;                                                                                                                         // password
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,11 +34,10 @@ public class SpringSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login", "/swagger-ui/**", "/v3/api-docs/**",
-                                "/swagger/**", "api/rentals/rental-pictures/*")
+                                "/swagger/**", "api/rentals/rental-pictures/**")
                         .permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-                // .httpBasic(Customizer.withDefaults()) // ?
                 .build();
     }
 
