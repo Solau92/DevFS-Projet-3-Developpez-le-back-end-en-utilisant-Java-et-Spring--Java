@@ -81,7 +81,7 @@ To run the app, go to the folder that contains the pom.xml file and execute the 
 Navigate to http://localhost:4200 to access the whole app.
 
 NB : 
-- if you have run the *data.sql* file, you can use theses credentials : 
+- if you have run the *data.sql* file, you can use theses credentials to log in : 
    . user : user1@gmail.com
    . password : password 
 - the passwords of all users in database are "password"
