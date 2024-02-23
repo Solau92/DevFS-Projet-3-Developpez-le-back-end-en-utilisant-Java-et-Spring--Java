@@ -81,12 +81,17 @@ To run the app, go to the folder that contains the pom.xml file and execute the 
 Navigate to http://localhost:4200 to access the whole app.
 
 NB : 
-- if you have run the *data.sql* file, you can use theses credentials : 
+- if you have run the *data.sql* file, you can use theses credentials to log in : 
    . user : user1@gmail.com
    . password : password 
 - the passwords of all users in database are "password"
 
+## - **Documentation** 
 
-## Version
+You can access the documentation of the app here : 
+- http://localhost:3001/swagger/documentation
+- http://localhost:3001/swagger/api-do (JSON format)
+
+## - **Version**
 
 1.0.0
