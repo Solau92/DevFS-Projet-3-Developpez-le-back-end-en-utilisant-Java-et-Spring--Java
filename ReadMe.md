@@ -86,7 +86,12 @@ NB :
    . password : password 
 - the passwords of all users in database are "password"
 
+## - **Documentation** 
 
-## Version
+You can access the documentation of the app here : 
+- http://localhost:3001/swagger/documentation
+- http://localhost:3001/swagger/api-do (JSON format)
+
+## - **Version**
 
 1.0.0
